@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard-header">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="h2 mb-2">Good morning, @User.Identity!.Name!</h1>
+            <p class="mb-0 opacity-75">Let's make today count</p>
+        </div>
+        <div class="col-md-4">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-card">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- today's Habits -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">Today's Habits</h5>
+                    <span class="badge bg-primary">3/5 completed</span>
+                </div>
+
+                <div class="habit-list">
+                    <!-- sample habit items -->
+                    <div class="habit-card d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="habit-icon bg-primary text-white me-3">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Drink 8 glasses of water</h6>
+                                <small class="text-muted">Daily hydration goal</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="streak-badge me-3">7 days</span>
+                            <button class="btn btn-success btn-sm">✓ Done</button>
+                        </div>
+                    </div>
+
+                    <div class="habit-card d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="habit-icon bg-warning text-white me-3">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">30 minute workout</h6>
+                                <small class="text-muted">Stay active and healthy</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="streak-badge me-3">5 days</span>
+                            <button class="btn btn-outline-primary btn-sm">Mark Done</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a asp-controller="Habits" asp-action="Index" class="btn btn-outline-primary">View All Habits</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- active Goals -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">Active Goals</h5>
+                    <a asp-controller="Goals" asp-action="Index" class="text-decoration-none">View all</a>
+                </div>
+
+                <div class="goal-list">
+                    <div class="goal-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">Read 12 books this year</h6>
+                            <small class="text-muted">7/12</small>
+                        </div>
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div class="progress-bar bg-primary" style="width: 58%"></div>
+                        </div>
+                        <small class="text-muted">58% complete</small>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">Lose 10 pounds</h6>
+                            <small class="text-muted">6/10 lbs</small>
+                        </div>
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: 60%"></div>
+                        </div>
+                        <small class="text-muted">60% complete</small>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a asp-controller="Goals" asp-action="Create" class="btn btn-primary btn-sm">+ Add New Goal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
