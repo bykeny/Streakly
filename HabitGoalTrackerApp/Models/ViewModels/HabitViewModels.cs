@@ -71,7 +71,7 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public int LongestStreak { get; set; }
         public int TotalCompletions { get; set; }
         public bool IsCompletedToday { get; set; }
-        public List<HabitCompletion> CompletionHistory { get; set; } = new();
+        public List<HabitCompletionDay> CompletionHistory { get; set; } = new();
     }
 
     public class HabitCompletionDay

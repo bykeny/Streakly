@@ -7,48 +7,118 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HabitGoalTrackerApp.Data;
 using HabitGoalTrackerApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using HabitGoalTrackerApp.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using HabitGoalTrackerApp.Models.ViewModels;
 
 namespace HabitGoalTrackerApp.Controllers
 {
+    [Authorize]
     public class HabitsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
+        private readonly IHabitService _habitService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HabitsController(ApplicationDbContext context)
+        public HabitsController(IHabitService habitService, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _habitService = habitService;
+            _userManager = userManager;
         }
 
         // GET: Habits
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Habits.Include(h => h.User);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = _userManager.GetUserId(User)!;
+            var habits = await _habitService.GetUserHabitsAsync(userId);
+
+            var viewModel = new List<HabitListViewModel>();
+
+            foreach (var habit in habits)
+            {
+                var isCompletedToday = await _habitService.IsHabitCompletedTodayAsync(habit.Id);
+                var streak = await _habitService.GetHabitStreakAsync(habit.Id);
+
+                var last7Days = new List<bool>();
+                for (int i = 6; i >= 0; i--)
+                {
+                    var date = DateTime.Today.AddDays(-i);
+                    var completed = habit.Completions.Any(c => c.CompletedDate.Date == date);
+                    last7Days.Add(completed);
+                }
+
+                viewModel.Add(new HabitListViewModel
+                {
+                    Id = habit.Id,
+                    Title = habit.Title,
+                    Description = habit.Description,
+                    IconName = habit.IconName,
+                    Color = habit.Color ?? "#FFFFFF",
+                    IsActive = habit.IsActive,
+                    CreatedAt = habit.CreatedAt,
+                    CurrentStreak = streak,
+                    IsCompletedToday = isCompletedToday,
+                    Last7Days = last7Days
+                });
+            }
+
+            return View(viewModel);
         }
 
         // GET: Habits/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var userId = _userManager.GetUserId(User)!;
+            var habit = await _habitService.GetHabitByIdAsync(id, userId);
 
-            var habit = await _context.Habits
-                .Include(h => h.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (habit == null)
             {
                 return NotFound();
             }
 
-            return View(habit);
+            var isCompletedToday = await _habitService.IsHabitCompletedTodayAsync(habit.Id);
+            var currentStreak = await _habitService.GetHabitStreakAsync(habit.Id);
+
+            var allCompletions = habit.Completions
+                .OrderBy(c => c.CompletedDate).ToList();
+            var longestStreak = CalculateLongestStreak(allCompletions);
+
+
+            var completionHistory = new List<HabitCompletionDay>();
+            for (int i = 29; i >= 0; i--)
+            {
+                var date = DateTime.Today.AddDays(-i);
+                var completed = habit.Completions.Any(c => c.CompletedDate.Date == date);
+                completionHistory.Add(new HabitCompletionDay
+                {
+                    Date = date,
+                    IsCompleted = completed
+                });
+            }
+
+            var viewModel = new HabitDetailsViewModel
+            {
+                Id = habit.Id,
+                Title = habit.Title,
+                Description = habit.Description,
+                IconName = habit.IconName,
+                Color = habit.Color ?? "#FFFFFF",
+                IsActive = habit.IsActive,
+                CreatedAt = habit.CreatedAt,
+                CurrentStreak = currentStreak,
+                LongestStreak = longestStreak,
+                TotalCompletions = habit.Completions.Count,
+                IsCompletedToday = isCompletedToday,
+                CompletionHistory = completionHistory
+            };
+
+            return View(viewModel);
         }
 
         // GET: Habits/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -57,33 +127,41 @@ namespace HabitGoalTrackerApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,IconName,Color,CreatedAt,IsActive,UserId")] Habit habit)
+        public async Task<IActionResult> Create(CreateHabitViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(habit);
-                await _context.SaveChangesAsync();
+                var userId = _userManager.GetUserId(User)!;
+                await _habitService.CreateHabitAsync(model, userId);
+                TempData["SuccessMessage"] = "Habit created successfully!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", habit.UserId);
-            return View(habit);
+
+            return View(model);
         }
 
         // GET: Habits/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var userId = _userManager.GetUserId(User)!;
+            var habit = await _habitService.GetHabitByIdAsync(id, userId);
 
-            var habit = await _context.Habits.FindAsync(id);
             if (habit == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", habit.UserId);
-            return View(habit);
+
+            var viewModel = new EditHabitViewModel
+            {
+                Id = habit.Id,
+                Title = habit.Title,
+                Description = habit.Description,
+                IconName = habit.IconName,
+                Color = habit.Color ?? "#FFFFFF",
+                IsActive = habit.IsActive
+            };
+
+            return View(viewModel);
         }
 
         // POST: Habits/Edit/5
@@ -91,48 +169,38 @@ namespace HabitGoalTrackerApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,IconName,Color,CreatedAt,IsActive,UserId")] Habit habit)
+        public async Task<IActionResult> Edit(int id, EditHabitViewModel model)
         {
-            if (id != habit.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                var userId = _userManager.GetUserId(User)!;
+                var success = await _habitService.UpdateHabitAsync(id, model, userId);
+                if (success)
                 {
-                    _context.Update(habit);
-                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Habit updated successfully!";
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!HabitExists(habit.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", "An error occurred while updating the habit.");
+                    // return NotFound();
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", habit.UserId);
-            return View(habit);
+
+            return View(model);
         }
 
         // GET: Habits/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var userId = _userManager.GetUserId(User)!;
+            var habit = await _habitService.GetHabitByIdAsync(id, userId);
 
-            var habit = await _context.Habits
-                .Include(h => h.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (habit == null)
             {
                 return NotFound();
@@ -146,19 +214,77 @@ namespace HabitGoalTrackerApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var habit = await _context.Habits.FindAsync(id);
-            if (habit != null)
+            var userId = _userManager.GetUserId(User)!;
+            var success = await _habitService.DeleteHabitAsync(id, userId);
+
+            if (success)
             {
-                _context.Habits.Remove(habit);
+                TempData["SuccessMessage"] = "Habit deleted successfully!";
+                //return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                ModelState.AddModelError("", "An error occurred while deleting the habit.");
+                //return View();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HabitExists(int id)
+        [HttpPost]
+        public async Task<IActionResult> ToggleCompletion(int id)
         {
-            return _context.Habits.Any(e => e.Id == id);
+            var userId = _userManager.GetUserId(User)!;
+            var isCompleted = await _habitService.IsHabitCompletedTodayAsync(id);
+
+            bool success;
+
+            if (isCompleted)
+            {
+                success = await _habitService.UnmarkHabitCompleteAsync(id, userId);
+            }
+            else
+            {
+                success = await _habitService.MarkHabitCompleteAsync(id, userId);
+            }
+
+            if (success)
+            {
+                return Json(new { success = true, completed = !isCompleted });
+            }
+
+            return Json(new { success = false });
+        }
+
+        private async Task<bool> HabitExists(int id)
+        {
+            var habits = await _habitService.GetUserHabitsAsync(_userManager.GetUserId(User)!);
+            return habits.Any(h => h.Id == id);
+        }
+
+        private int CalculateLongestStreak(List<HabitCompletion> completions)
+        {
+            if (!completions.Any()) return 0;
+
+            var dates = completions.Select(c => c.CompletedDate.Date).Distinct().OrderBy(d => d).ToList();
+
+            int longestStreak = 1;
+            int currentStreak = 1;
+
+            for (int i = 1; i < dates.Count; i++)
+            {
+                if (dates[i] == dates[i - 1].AddDays(1))
+                {
+                    currentStreak++;
+                    longestStreak = Math.Max(longestStreak, currentStreak);
+                }
+                else
+                {
+                    currentStreak = 1;
+                }
+            }
+
+            return longestStreak;
         }
     }
 }
