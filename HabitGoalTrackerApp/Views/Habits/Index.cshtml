@@ -1,71 +1,310 @@
-﻿@model IEnumerable<HabitGoalTrackerApp.Models.Habit>
+﻿@model IEnumerable<HabitGoalTrackerApp.Models.ViewModels.HabitListViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Habits";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">My Habits</h1>
+        <p class="text-muted mb-0">Track your daily habits and build consistency</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add New Habit
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IconName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IconName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 }
-    </tbody>
-</table>
+
+<!-- Filter Tabs -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="btn-group" role="group" aria-label="Habit filters">
+            <input type="radio" class="btn-check" name="habitFilter" id="filterAll" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="filterAll">All Habits</label>
+
+            <input type="radio" class="btn-check" name="habitFilter" id="filterActive" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filterActive">Active</label>
+
+            <input type="radio" class="btn-check" name="habitFilter" id="filterCompleted" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filterCompleted">Completed Today</label>
+
+            <input type="radio" class="btn-check" name="habitFilter" id="filterPending" autocomplete="off">
+            <label class="btn btn-outline-primary" for="filterPending">Pending</label>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <!-- Empty State -->
+    <div class="text-center py-5">
+        <div class="empty-state-icon mb-4">
+            <svg width="80" height="80" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-muted">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h3 class="h4 text-muted mb-3">No habits yet</h3>
+        <p class="text-muted mb-4">Start building better habits by creating your first one!</p>
+        <a asp-action="Create" class="btn btn-primary">Create Your First Habit</a>
+    </div>
+}
+else
+{
+    <!-- Habits Grid -->
+    <div class="row" id="habitsContainer">
+        @foreach (var habit in Model)
+        {
+            <div class="col-lg-6 col-xl-4 mb-4 habit-item"
+                 data-active="@habit.IsActive.ToString().ToLower()"
+                 data-completed="@habit.IsCompletedToday.ToString().ToLower()">
+                <div class="habit-card h-100">
+                    <div class="card-body">
+                        <!-- Habit Header -->
+                        <div class="d-flex align-items-start justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="habit-icon me-3" style="background-color: @(habit.Color ?? "#3b82f6");">
+                                    @if (!string.IsNullOrEmpty(habit.IconName))
+                                    {
+                                        <i class="@habit.IconName"></i>
+                                    }
+                                    else
+                                    {
+                                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    }
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-1">@habit.Title</h5>
+                                    @if (!string.IsNullOrEmpty(habit.Description))
+                                    {
+                                        <p class="text-muted small mb-0">@habit.Description</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                    </svg>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@habit.Id">View Details</a></li>
+                                    <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@habit.Id">Edit</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@habit.Id">Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Streak Info -->
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-warning me-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path>
+                                </svg>
+                                <span class="small text-muted">@habit.CurrentStreak day streak</span>
+                            </div>
+                            @if (!habit.IsActive)
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                        </div>
+
+                        <!-- Last 7 Days Progress -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small text-muted">Last 7 days</span>
+                                <span class="small text-muted">@habit.Last7Days.Count(d => d)/7 completed</span>
+                            </div>
+                            <div class="progress-dots d-flex gap-1">
+                                @for (int i = 0; i < habit.Last7Days.Count; i++)
+                                {
+                                    <div class="progress-dot @(habit.Last7Days[i] ? "completed" : "")"></div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="d-grid">
+                            @if (habit.IsActive)
+                            {
+                                <button class="btn @(habit.IsCompletedToday ? "btn-success" : "btn-outline-primary") toggle-completion"
+                                        data-habit-id="@habit.Id"
+                                        data-completed="@habit.IsCompletedToday.ToString().ToLower()">
+                                    @if (habit.IsCompletedToday)
+                                    {
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>Completed Today</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Mark Complete</span>
+                                    }
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary" disabled>Inactive</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Filter functionality
+        document.querySelectorAll('input[name="habitFilter"]').forEach(filter => {
+            filter.addEventListener('change', function() {
+                const filterValue = this.id;
+                const habitItems = document.querySelectorAll('.habit-item');
+
+                habitItems.forEach(item => {
+                    let show = true;
+
+                    switch(filterValue) {
+                        case 'filterActive':
+                            show = item.dataset.active === 'true';
+                            break;
+                        case 'filterCompleted':
+                            show = item.dataset.completed === 'true';
+                            break;
+                        case 'filterPending':
+                            show = item.dataset.active === 'true' && item.dataset.completed === 'false';
+                            break;
+                        default: // filterAll
+                            show = true;
+                    }
+
+                    item.style.display = show ? 'block' : 'none';
+                });
+            });
+        });
+
+        // Toggle completion functionality
+        document.querySelectorAll('.toggle-completion').forEach(button => {
+            button.addEventListener('click', function() {
+                const habitId = this.dataset.habitId;
+                const isCompleted = this.dataset.completed === 'true';
+
+                // Disable button during request
+                this.disabled = true;
+
+                fetch(`/Habits/ToggleCompletion/${habitId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update button appearance
+                        const newCompleted = data.completed;
+                        this.dataset.completed = newCompleted.toString();
+
+                        if (newCompleted) {
+                            this.className = 'btn btn-success toggle-completion';
+                            this.innerHTML = `
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Completed Today</span>
+                            `;
+                        } else {
+                            this.className = 'btn btn-outline-primary toggle-completion';
+                            this.innerHTML = '<span>Mark Complete</span>';
+                        }
+
+                        // Update parent container data attribute
+                        this.closest('.habit-item').dataset.completed = newCompleted.toString();
+
+                        // Show success message
+                        const message = newCompleted ? 'Habit marked as complete!' : 'Habit marked as incomplete!';
+                        showToast(message, 'success');
+                    } else {
+                        showToast('Failed to update habit. Please try again.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('An error occurred. Please try again.', 'error');
+                })
+                .finally(() => {
+                    this.disabled = false;
+                });
+            });
+        });
+
+        // Simple toast notification function
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+    </script>
+}
+
+<style>
+    .progress-dots {
+        height: 8px;
+    }
+
+    .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--gray-300);
+        flex: 1;
+        max-width: 8px;
+    }
+
+    .progress-dot.completed {
+        background-color: var(--success-color);
+    }
+
+    .habit-card {
+        transition: all 0.2s ease;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .habit-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .empty-state-icon {
+        opacity: 0.5;
+    }
+</style>
