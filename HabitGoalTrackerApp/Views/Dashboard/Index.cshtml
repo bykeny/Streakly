@@ -1,4 +1,6 @@
-﻿@{
+﻿@model HabitGoalTrackerApp.Models.ViewModels.DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
@@ -12,13 +14,13 @@
             <div class="row g-3">
                 <div class="col-6">
                     <div class="stat-card">
-                        <div class="stat-number">7</div>
+                        <div class="stat-number">@Model.CurrentLongestStreak</div>
                         <div class="stat-label">Day Streak</div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-card">
-                        <div class="stat-number">85%</div>
+                        <div class="stat-number">@Model.WeeklyCompletionRate</div>
                         <div class="stat-label">This Week</div>
                     </div>
                 </div>
@@ -34,12 +36,12 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="card-title mb-0">Today's Habits</h5>
-                    <span class="badge bg-primary">3/5 completed</span>
+                    <span class="badge bg-primary">@Model.CompletedTodayCount/@Model.TotalHabits completed</span>
                 </div>
 
                 <div class="habit-list">
                     <!-- sample habit items -->
-                    <div class="habit-card d-flex align-items-center justify-content-between">
+                    @* <div class="habit-card d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <div class="habit-icon bg-primary text-white me-3">
                                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,7 +75,47 @@
                             <span class="streak-badge me-3">5 days</span>
                             <button class="btn btn-outline-primary btn-sm">Mark Done</button>
                         </div>
-                    </div>
+                    </div> *@
+
+                    @if (Model.TodaysHabits.Any())
+                    {
+                        @foreach (var habit in Model.TodaysHabits)
+                        {
+                            <div class="habit-card d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="habit-icon me-3" style="background-color: @(habit.Color ?? "#3b82f6");">
+                                        @if (!string.IsNullOrEmpty(habit.IconName))
+                                        {
+                                            <i class="@habit.IconName"></i>
+                                        }
+                                        else
+                                        {
+                                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        }
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">@habit.Title</h6>
+                                        <small class="text-muted">@habit.Description</small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="streak-badge me-3">@habit.CurrentStreak days</span>
+                                    <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@habit.Id" />
+                                        <button type="submit" class="btn btn-sm @(habit.IsCompletedToday ? "btn-success" : "btn-outline-primary")">
+                                            @(habit.IsCompletedToday ? "✓ Done" : "Mark Done")
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-muted">No habits for today.</div>
+                    }
                 </div>
 
                 <div class="text-center mt-4">
@@ -82,6 +124,8 @@
             </div>
         </div>
     </div>
+
+    @* TODO : Modify the Goals section as Habits *@
 
     <div class="col-lg-4">
         <!-- active Goals -->
