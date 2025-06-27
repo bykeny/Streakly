@@ -88,8 +88,9 @@ else
                                     <h5 class="card-title mb-1">@habit.Title</h5>
                                     @if (!string.IsNullOrEmpty(habit.Description))
                                     {
-                                        <p class="text-muted small mb-0">@habit.Description</p>
+                                        <p class="text-muted small mb-1">@habit.Description</p>
                                     }
+                                    <small class="text-info">@habit.RepeatScheduleDisplay</small>
                                 </div>
                             </div>
                             <div class="dropdown">
@@ -139,21 +140,33 @@ else
                         <div class="d-grid">
                             @if (habit.IsActive)
                             {
-                                <button class="btn @(habit.IsCompletedToday ? "btn-success" : "btn-outline-primary") toggle-completion"
-                                        data-habit-id="@habit.Id"
-                                        data-completed="@habit.IsCompletedToday.ToString().ToLower()">
-                                    @if (habit.IsCompletedToday)
-                                    {
+                                @if (habit.IsScheduledToday)
+                                {
+                                    <button class="btn @(habit.IsCompletedToday ? "btn-success" : "btn-outline-primary") toggle-completion"
+                                            data-habit-id="@habit.Id"
+                                            data-completed="@habit.IsCompletedToday.ToString().ToLower()">
+                                        @if (habit.IsCompletedToday)
+                                        {
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            <span>Completed Today</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Mark Complete</span>
+                                        }
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-secondary" disabled>
                                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z"></path>
                                         </svg>
-                                        <span>Completed Today</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Mark Complete</span>
-                                    }
-                                </button>
+                                        Not scheduled today
+                                    </button>
+                                }
                             }
                             else
                             {

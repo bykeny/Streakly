@@ -262,6 +262,38 @@ namespace HabitGoalTrackerApp.Controllers
             return habits.Any(h => h.Id == id);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ToggleStatus(int id, bool isActive)
+        {
+            var userId = _userManager.GetUserId(User)!;
+            var habit = await _habitService.GetHabitByIdAsync(id, userId);
+
+            if (habit == null)
+            {
+                return Json(new { success = false, message = "Habit not found" });
+            }
+
+            var editModel = new EditHabitViewModel
+            {
+                Id = habit.Id,
+                Title = habit.Title,
+                Description = habit.Description,
+                IconName = habit.IconName,
+                Color = habit.Color,
+                IsActive = isActive
+            };
+
+            var success = await _habitService.UpdateHabitAsync(id, editModel, userId);
+
+            if (success)
+            {
+                var statusText = isActive ? "resumed" : "paused";
+                return Json(new { success = true, message = $"Habit {statusText} successfully", isActive = isActive });
+            }
+
+            return Json(new { success = false, message = "Failed to update habit status" });
+        }
+
         private int CalculateLongestStreak(List<HabitCompletion> completions)
         {
             if (!completions.Any()) return 0;

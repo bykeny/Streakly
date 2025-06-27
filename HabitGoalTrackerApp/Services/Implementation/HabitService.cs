@@ -15,12 +15,18 @@ namespace HabitGoalTrackerApp.Services.Implementation
         }
         public async Task<Habit> CreateHabitAsync(CreateHabitViewModel model, string userId)
         {
+            var customDaysJson = model.RepeatType == RepeatType.Custom && model.CustomDays.Any()
+                ? System.Text.Json.JsonSerializer.Serialize(model.CustomDays.ToArray())
+                : null;
+
             var habit = new Habit
             {
                 Title = model.Title,
                 Description = model.Description,
                 IconName = model.IconName,
-                Color = model.Color,
+                Color = model.Color ?? "#3b82f6",
+                RepeatType = model.RepeatType,
+                CustomDays = customDaysJson,
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
@@ -51,16 +57,20 @@ namespace HabitGoalTrackerApp.Services.Implementation
 
             foreach (var habit in habits.Where(h => h.IsActive))
             {
+                var isScheduledToday = habit.IsScheduledForDate(DateTime.Today);
                 var isCompletedToday = await IsHabitCompletedTodayAsync(habit.Id);
                 var streak = await GetHabitStreakAsync(habit.Id);
 
-                var last7days = new List<bool>();
+                // Get last 7 days completion status (only for scheduled days)
+                var last7Days = new List<bool>();
                 for (int i = 6; i >= 0; i--)
                 {
                     var date = DateTime.Today.AddDays(-i);
-                    var completed = habit.Completions
-                        .Any(c=> c.CompletedDate.Date == date);
-                    last7days.Add(completed);
+                    var wasScheduled = habit.IsScheduledForDate(date);
+                    var wasCompleted = habit.Completions.Any(c => c.CompletedDate.Date == date);
+
+                    // Show as completed if it was completed OR if it wasn't scheduled for that day
+                    last7Days.Add(wasCompleted || !wasScheduled);
                 }
 
                 habitsList.Add(new HabitListViewModel
@@ -74,16 +84,39 @@ namespace HabitGoalTrackerApp.Services.Implementation
                     CreatedAt = habit.CreatedAt,
                     CurrentStreak = streak,
                     IsCompletedToday = isCompletedToday,
-                    Last7Days = last7days
+                    IsScheduledToday = isScheduledToday,
+                    RepeatScheduleDisplay = habit.GetRepeatScheduleDisplay(),
+                    Last7Days = last7Days
                 });
             }
 
-            var completedTodayCount = habitsList.Count(h => h.IsCompletedToday);
+            // Only count habits that are scheduled for today in completion stats
+            var scheduledTodayCount = habitsList.Count(h => h.IsScheduledToday);
+            var completedTodayCount = habitsList.Count(h => h.IsScheduledToday && h.IsCompletedToday);
             var longestStreak = habitsList.Any() ? habitsList.Max(h => h.CurrentStreak) : 0;
 
-            var totalPossibleCompletions = habitsList.Count * 7; // 7 days a week
-            var actualCompletions = habitsList.Sum(h => h.Last7Days.Count(d => d));
-            var weeklyCompletionRate = totalPossibleCompletions > 0 ? (double)actualCompletions / totalPossibleCompletions * 100 : 0;
+            // Calculate weekly completion rate (only for scheduled days)
+            var totalScheduledDays = 0;
+            var totalCompletedDays = 0;
+
+            foreach (var habit in habitsList)
+            {
+                for (int i = 6; i >= 0; i--)
+                {
+                    var date = DateTime.Today.AddDays(-i);
+                    var wasScheduled = habits.First(h => h.Id == habit.Id).IsScheduledForDate(date);
+                    if (wasScheduled)
+                    {
+                        totalScheduledDays++;
+                        if (habits.First(h => h.Id == habit.Id).Completions.Any(c => c.CompletedDate.Date == date))
+                        {
+                            totalCompletedDays++;
+                        }
+                    }
+                }
+            }
+
+            var weeklyRate = totalScheduledDays > 0 ? (double)totalCompletedDays / totalScheduledDays * 100 : 0;
 
             return new DashboardViewModel
             {
@@ -91,8 +124,8 @@ namespace HabitGoalTrackerApp.Services.Implementation
                 TotalHabits = habitsList.Count,
                 CompletedTodayCount = completedTodayCount,
                 CurrentLongestStreak = longestStreak,
-                WeeklyCompletionRate = Math.Round(weeklyCompletionRate, 1),
-                TodaysHabits = habitsList.Take(5).ToList(), // Limit to 5 habits for dashboard
+                WeeklyCompletionRate = Math.Round(weeklyRate, 1),
+                TodaysHabits = habitsList.Where(h => h.IsScheduledToday).Take(5).ToList(),
                 ActiveGoals = new List<GoalSummaryViewModel>()
             };
         }
@@ -211,16 +244,19 @@ namespace HabitGoalTrackerApp.Services.Implementation
         public async Task<bool> UpdateHabitAsync(int id, EditHabitViewModel model, string userId)
         {
             var habit = await GetHabitByIdAsync(id, userId);
-            if (habit == null)
-            {
-                return false;
-            }
+            if (habit == null) return false;
+
+            var customDaysJson = model.RepeatType == RepeatType.Custom && model.CustomDays.Any()
+                ? System.Text.Json.JsonSerializer.Serialize(model.CustomDays.ToArray())
+                : null;
 
             habit.Title = model.Title;
             habit.Description = model.Description;
             habit.IconName = model.IconName;
             habit.Color = model.Color;
             habit.IsActive = model.IsActive;
+            habit.RepeatType = model.RepeatType;
+            habit.CustomDays = customDaysJson;
 
             await _context.SaveChangesAsync();
             return true;

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "60li3OOpPJ9+9qaduRrMoqt5K36/FJWXFvtZ1vqVTiA=",
+  "Hash": "o+jjWJ72/SsOD53qzlMqRSqJezfbkcPn6wD3AexRi6o=",
   "Source": "HabitGoalTrackerApp",
   "BasePath": "_content/HabitGoalTrackerApp",
   "Mode": "Default",
@@ -3692,12 +3692,12 @@
       "OriginalItemSpec": "C:\\Users\\kenan\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\9.0.5\\staticwebassets\\V5\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
     },
     {
-      "Identity": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-ckzp7ddajl.gz",
+      "Identity": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-7te5wg1qz0.gz",
       "SourceId": "HabitGoalTrackerApp",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/HabitGoalTrackerApp",
-      "RelativePath": "css/site#[.{fingerprint=ckzp7ddajl}]?.css.gz",
+      "RelativePath": "css/site#[.{fingerprint=7te5wg1qz0}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -3706,8 +3706,8 @@
       "RelatedAsset": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\wwwroot\\css\\site.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "4abibgdwyj",
-      "Integrity": "ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk=",
+      "Fingerprint": "p39blslk94",
+      "Integrity": "K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\wwwroot\\css\\site.css"
@@ -4042,8 +4042,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "ckzp7ddajl",
-      "Integrity": "tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg=",
+      "Fingerprint": "7te5wg1qz0",
+      "Integrity": "xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -5353,13 +5353,13 @@
   ],
   "Endpoints": [
     {
-      "Route": "css/site.ckzp7ddajl.css",
-      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-ckzp7ddajl.gz",
+      "Route": "css/site.7te5wg1qz0.css",
+      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-7te5wg1qz0.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000606796117"
+          "Quality": "0.000582411182"
         }
       ],
       "ResponseHeaders": [
@@ -5369,15 +5369,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1647"
+          "Value": "1716"
         },
         {
           "Name": "ETag",
-          "Value": "\"ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk=\""
+          "Value": "\"K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 01 Jun 2025 18:24:14 GMT"
+          "Value": "Sun, 15 Jun 2025 15:36:19 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5397,13 +5397,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg=\""
+          "Value": "W/\"xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ckzp7ddajl"
+          "Value": "7te5wg1qz0"
         },
         {
           "Name": "label",
@@ -5411,12 +5411,12 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg="
+          "Value": "sha256-xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw="
         }
       ]
     },
     {
-      "Route": "css/site.ckzp7ddajl.css",
+      "Route": "css/site.7te5wg1qz0.css",
       "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\wwwroot\\css\\site.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -5426,7 +5426,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "6618"
+          "Value": "6859"
         },
         {
           "Name": "Content-Type",
@@ -5434,11 +5434,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg=\""
+          "Value": "\"xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 01 Jun 2025 18:24:14 GMT"
+          "Value": "Sun, 15 Jun 2025 15:36:19 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5448,7 +5448,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ckzp7ddajl"
+          "Value": "7te5wg1qz0"
         },
         {
           "Name": "label",
@@ -5456,13 +5456,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg="
+          "Value": "sha256-xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw="
         }
       ]
     },
     {
-      "Route": "css/site.ckzp7ddajl.css.gz",
-      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-ckzp7ddajl.gz",
+      "Route": "css/site.7te5wg1qz0.css.gz",
+      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-7te5wg1qz0.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5471,7 +5471,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1647"
+          "Value": "1716"
         },
         {
           "Name": "Content-Type",
@@ -5479,11 +5479,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk=\""
+          "Value": "\"K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 01 Jun 2025 18:24:14 GMT"
+          "Value": "Sun, 15 Jun 2025 15:36:19 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5501,7 +5501,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ckzp7ddajl"
+          "Value": "7te5wg1qz0"
         },
         {
           "Name": "label",
@@ -5509,18 +5509,18 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk="
+          "Value": "sha256-K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw="
         }
       ]
     },
     {
       "Route": "css/site.css",
-      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-ckzp7ddajl.gz",
+      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-7te5wg1qz0.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.000606796117"
+          "Quality": "0.000582411182"
         }
       ],
       "ResponseHeaders": [
@@ -5530,15 +5530,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1647"
+          "Value": "1716"
         },
         {
           "Name": "ETag",
-          "Value": "\"ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk=\""
+          "Value": "\"K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 01 Jun 2025 18:24:14 GMT"
+          "Value": "Sun, 15 Jun 2025 15:36:19 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5558,13 +5558,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg=\""
+          "Value": "W/\"xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg="
+          "Value": "sha256-xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw="
         }
       ]
     },
@@ -5579,7 +5579,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "6618"
+          "Value": "6859"
         },
         {
           "Name": "Content-Type",
@@ -5587,11 +5587,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg=\""
+          "Value": "\"xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 01 Jun 2025 18:24:14 GMT"
+          "Value": "Sun, 15 Jun 2025 15:36:19 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5601,13 +5601,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-tHQWmybKSuPZMIuGADvn19IyjEsf1oF552pUAoSxUjg="
+          "Value": "sha256-xTWZzAVNY8LmQn4beXaUUyhfKgrTgqeNT8i4CLCLhiw="
         }
       ]
     },
     {
       "Route": "css/site.css.gz",
-      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-ckzp7ddajl.gz",
+      "AssetFile": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\obj\\Debug\\net9.0\\compressed\\xbt72p170e-7te5wg1qz0.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -5616,7 +5616,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1647"
+          "Value": "1716"
         },
         {
           "Name": "Content-Type",
@@ -5624,11 +5624,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk=\""
+          "Value": "\"K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 01 Jun 2025 18:24:14 GMT"
+          "Value": "Sun, 15 Jun 2025 15:36:19 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -5646,7 +5646,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-ZPv0cT3QOcHVQw8XHcMIF6c6OShTD4qhlKO6E9dhcKk="
+          "Value": "sha256-K4iBTcQnrHSvomux4IitAprcuodZiFJO7tIkWQdaUgw="
         }
       ]
     },

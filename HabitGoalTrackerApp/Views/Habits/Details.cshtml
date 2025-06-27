@@ -26,7 +26,6 @@
 </div>
 
 <div class="row">
-    <!-- Main Content -->
     <div class="col-lg-8">
         <!-- Habit Overview Card -->
         <div class="card mb-4">
@@ -163,7 +162,6 @@
         </div>
     </div>
 
-    <!-- Sidebar -->
     <div class="col-lg-4">
         <!-- Statistics Card -->
         <div class="card mb-4">
@@ -252,7 +250,7 @@
 
 @section Scripts {
     <script>
-        // Toggle completion functionality (same as in Index)
+        // Toggle completion functionality
         document.querySelectorAll('.toggle-completion').forEach(button => {
             button.addEventListener('click', function() {
                 const habitId = this.dataset.habitId;
@@ -272,18 +270,72 @@
                     if (data.success) {
                         location.reload(); // Reload to update calendar and stats
                     } else {
-                        alert('Failed to update habit. Please try again.');
+                        showToast('Failed to update habit. Please try again.', 'error');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
+                    showToast('An error occurred. Please try again.', 'error');
                 })
                 .finally(() => {
                     this.disabled = false;
                 });
             });
         });
+
+        // Toggle habit status (pause/resume)
+        function toggleHabitStatus(habitId, isActive) {
+            const actionText = isActive ? 'resume' : 'pause';
+
+            if (!confirm(`Are you sure you want to ${actionText} this habit?`)) {
+                return;
+            }
+
+            fetch(`/Habits/ToggleStatus/${habitId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify({ isActive: isActive })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    // Reload page to reflect changes
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Failed to update habit status.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred. Please try again.', 'error');
+            });
+        }
+
+        // Toast notification function
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
     </script>
 }
 

@@ -18,7 +18,13 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public string? IconName { get; set; }
 
         [Display(Name = "Color")]
-        public string Color { get; set; } = "#FFFFFF";
+        public string? Color { get; set; }
+
+        [Display(Name = "Repeat Schedule")]
+        public RepeatType RepeatType { get; set; } = RepeatType.Daily;
+
+        [Display(Name = "Custom Days")]
+        public List<int> CustomDays { get; set; } = new();
     }
 
     public class EditHabitViewModel
@@ -38,10 +44,16 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public string? IconName { get; set; }
 
         [Display(Name = "Color")]
-        public string Color { get; set; } = "#FFFFFF";
+        public string? Color { get; set; }
 
         [Display(Name = "Active")]
         public bool IsActive { get; set; } = true;
+
+        [Display(Name = "Repeat Schedule")]
+        public RepeatType RepeatType { get; set; } = RepeatType.Daily;
+
+        [Display(Name = "Custom Days")]
+        public List<int> CustomDays { get; set; } = new();
     }
 
     public class HabitListViewModel
@@ -50,12 +62,14 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string? IconName { get; set; }
-        public string Color { get; set; } = "#FFFFFF";
+        public string? Color { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CurrentStreak { get; set; }
         public bool IsCompletedToday { get; set; }
         public List<bool> Last7Days { get; set; } = new();
+        public string RepeatScheduleDisplay { get; set; } = string.Empty;
+        public bool IsScheduledToday { get; set; } = true;
     }
 
     public class HabitDetailsViewModel
@@ -64,7 +78,7 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string? IconName { get; set; }
-        public string Color { get; set; } = "#FFFFFF";
+        public string? Color { get; set; }   
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public int CurrentStreak { get; set; }
@@ -72,6 +86,8 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public int TotalCompletions { get; set; }
         public bool IsCompletedToday { get; set; }
         public List<HabitCompletionDay> CompletionHistory { get; set; } = new();
+        public string RepeatScheduleDisplay { get; set; } = string.Empty;
+        public bool IsScheduledToday { get; set; } = true;
     }
 
     public class HabitCompletionDay

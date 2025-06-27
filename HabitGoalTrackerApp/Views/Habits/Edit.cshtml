@@ -1,4 +1,5 @@
-﻿@model HabitGoalTrackerApp.Models.ViewModels.EditHabitViewModel
+﻿@using Microsoft.IdentityModel.Tokens
+@model HabitGoalTrackerApp.Models.ViewModels.EditHabitViewModel
 
 @{
     ViewData["Title"] = $"Edit - {Model.Title}";
@@ -19,21 +20,21 @@
                 <form asp-action="Edit" method="post">
                     <input type="hidden" asp-for="Id" />
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-
+                    
                     <div class="row">
                         <div class="col-md-8">
                             <div class="mb-3">
-                                <label asp-for="Title" class="form-label fw-semibold">Habit Title *</label>
+                                <label asp-for="Title" class="form-label fw-semibold">Habit Name *</label>
                                 <input asp-for="Title" class="form-control form-control-lg" />
                                 <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
-
+                            
                             <div class="mb-3">
                                 <label asp-for="Description" class="form-label fw-semibold">Description</label>
                                 <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
-
+                            
                             <div class="mb-3">
                                 <div class="form-check form-switch">
                                     <input asp-for="IsActive" class="form-check-input" type="checkbox" />
@@ -43,8 +44,65 @@
                                 </div>
                                 <small class="text-muted">Inactive habits won't appear in your daily tracking</small>
                             </div>
-                        </div>
 
+                            <!-- Repeat Schedule Section -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Repeat Schedule</label>
+                                <div class="repeat-schedule-picker">
+                                    <div class="mb-3">
+                                        <div class="btn-group w-100" role="group" aria-label="Repeat schedule">
+                                            <input type="radio" class="btn-check repeat-type-radio" name="RepeatType" id="repeatDaily" value="0" autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="repeatDaily">Daily</label>
+
+                                            <input type="radio" class="btn-check repeat-type-radio" name="RepeatType" id="repeatWeekdays" value="1" autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="repeatWeekdays">Weekdays</label>
+
+                                            <input type="radio" class="btn-check repeat-type-radio" name="RepeatType" id="repeatWeekends" value="2" autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="repeatWeekends">Weekends</label>
+
+                                            <input type="radio" class="btn-check repeat-type-radio" name="RepeatType" id="repeatCustom" value="3" autocomplete="off">
+                                            <label class="btn btn-outline-primary" for="repeatCustom">Custom</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Custom Days Selection -->
+                                    <div id="customDaysContainer" class="custom-days-container" style="display: none;">
+                                        <label class="form-label fw-semibold mb-2">Select Days</label>
+                                        <div class="days-picker d-flex gap-3 flex-wrap">
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="0" id="sunday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="sunday">Sun</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="1" id="monday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="monday">Mon</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="2" id="tuesday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="tuesday">Tue</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="3" id="wednesday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="wednesday">Wed</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="4" id="thursday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="thursday">Thu</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="5" id="friday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="friday">Fri</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input custom-day" type="checkbox" value="6" id="saturday" name="CustomDays">
+                                                <label class="form-check-label day-label" for="saturday">Sat</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="col-md-4">
                             <!-- Color Selection -->
                             <div class="mb-3">
@@ -63,7 +121,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Icon Selection -->
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Choose Icon</label>
@@ -105,7 +163,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Preview -->
                     <div class="mb-4">
                         <label class="form-label fw-semibold">Preview</label>
@@ -119,6 +177,8 @@
                                 <div>
                                     <h6 class="mb-0" id="previewName">@Model.Title</h6>
                                     <small class="text-muted" id="previewDescription">@Model.Description</small>
+                                    <br>
+                                    <small class="text-info" id="previewSchedule">Every day</small>
                                 </div>
                                 @if (!Model.IsActive)
                                 {
@@ -129,7 +189,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="d-flex gap-3">
                         <button type="submit" class="btn btn-primary">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
@@ -145,45 +205,130 @@
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<!-- Inline JavaScript - This ensures DOM is ready and model data is available -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize repeat type from model
+    const repeatType = '@((int)Model.RepeatType)';
+    const repeatRadio = document.querySelector(`input[name="RepeatType"][value="${repeatType}"]`);
+    if (repeatRadio) {
+        repeatRadio.checked = true;
+        if (repeatType === '3') {
+            document.getElementById('customDaysContainer').style.display = 'block';
+            
+            // Initialize custom days if they exist
+            @if (Model.RepeatType == HabitGoalTrackerApp.Models.RepeatType.Custom && Model.CustomDays != null && Model.CustomDays.Any())
+            {
+                <text>
+                const customDays = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CustomDays));
+                customDays.forEach(day => {
+                    const checkbox = document.querySelector(`.custom-day[value="${day}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                </text>
+            }
+        }
+    }
 
-    <script>
-        // Color picker functionality
-        document.querySelectorAll('.color-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-
-                const color = this.dataset.color;
-                document.getElementById('selectedColor').value = color;
-                document.getElementById('previewIcon').style.backgroundColor = color;
-            });
+    // Color picker functionality
+    document.querySelectorAll('.color-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            const color = this.dataset.color;
+            document.getElementById('selectedColor').value = color;
+            document.getElementById('previewIcon').style.backgroundColor = color;
         });
+    });
 
-        // Icon picker functionality
-        document.querySelectorAll('.icon-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-
-                const icon = this.dataset.icon;
-                document.getElementById('selectedIcon').value = icon;
-
-                const previewIcon = document.getElementById('previewIcon');
-                previewIcon.innerHTML = this.innerHTML;
-            });
+    // Icon picker functionality
+    document.querySelectorAll('.icon-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            const icon = this.dataset.icon;
+            document.getElementById('selectedIcon').value = icon;
+            
+            const previewIcon = document.getElementById('previewIcon');
+            previewIcon.innerHTML = this.innerHTML;
         });
+    });
 
-        // Live preview updates
-        document.getElementById('Name').addEventListener('input', function() {
+    // Repeat schedule functionality
+    document.querySelectorAll('.repeat-type-radio').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const customContainer = document.getElementById('customDaysContainer');
+            if (this.value === '3') { // Custom
+                customContainer.style.display = 'block';
+            } else {
+                customContainer.style.display = 'none';
+                // Clear custom day selections
+                document.querySelectorAll('.custom-day').forEach(cb => cb.checked = false);
+            }
+            updatePreviewSchedule();
+        });
+    });
+
+    // Custom days change handler
+    document.querySelectorAll('.custom-day').forEach(checkbox => {
+        checkbox.addEventListener('change', updatePreviewSchedule);
+    });
+
+    // Live preview updates
+    const nameInput = document.getElementById('Name');
+    const descriptionInput = document.getElementById('Description');
+    
+    if (nameInput) {
+        nameInput.addEventListener('input', function() {
             document.getElementById('previewName').textContent = this.value || 'Habit name';
         });
+    }
 
-        document.getElementById('Description').addEventListener('input', function() {
+    if (descriptionInput) {
+        descriptionInput.addEventListener('input', function() {
             document.getElementById('previewDescription').textContent = this.value || 'Description';
         });
-    </script>
+    }
+
+    function updatePreviewSchedule() {
+        const selectedRepeat = document.querySelector('.repeat-type-radio:checked');
+        const previewSchedule = document.getElementById('previewSchedule');
+        
+        if (!selectedRepeat) return;
+        
+        let scheduleText = '';
+        switch(selectedRepeat.value) {
+            case '0':
+                scheduleText = 'Every day';
+                break;
+            case '1':
+                scheduleText = 'Weekdays (Mon-Fri)';
+                break;
+            case '2':
+                scheduleText = 'Weekends (Sat-Sun)';
+                break;
+            case '3':
+                const selectedDays = Array.from(document.querySelectorAll('.custom-day:checked'))
+                    .map(cb => {
+                        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        return dayNames[parseInt(cb.value)];
+                    });
+                scheduleText = selectedDays.length > 0 ? selectedDays.join(', ') : 'Select days';
+                break;
+        }
+        
+        previewSchedule.textContent = scheduleText;
+    }
+
+    // Initialize preview
+    updatePreviewSchedule();
+});
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
 
 <style>
@@ -198,27 +343,54 @@
         border: 2px solid transparent;
         transition: all 0.2s ease;
     }
-
-        .color-option:hover, .icon-option:hover {
-            transform: scale(1.1);
-        }
-
-        .color-option.active, .icon-option.active {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-        }
-
+    
+    .color-option:hover, .icon-option:hover {
+        transform: scale(1.1);
+    }
+    
+    .color-option.active, .icon-option.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    
     .icon-option {
         background-color: var(--gray-100);
         color: var(--gray-600);
     }
-
-        .icon-option.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
+    
+    .icon-option.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
     .habit-preview {
         background-color: var(--gray-50);
+    }
+
+    .custom-days-container {
+        background-color: var(--bg-secondary);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .day-label {
+        font-weight: 500;
+        min-width: 40px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .form-check {
+        margin-bottom: 0;
+    }
+
+    .days-picker .form-check {
+        flex: 0 0 auto;
+    }
+
+    .form-check-input:checked + .day-label {
+        color: var(--primary-color);
+        font-weight: 600;
     }
 </style>

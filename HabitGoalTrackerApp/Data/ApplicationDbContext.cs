@@ -59,6 +59,10 @@ namespace HabitGoalTrackerApp.Data
             builder.Entity<HabitCompletion>()
                 .HasIndex(hc => new { hc.HabitId, hc.CompletedDate })
                 .IsUnique();
+
+            builder.Entity<Habit>()
+                .Property(h => h.RepeatType)
+                .HasConversion<int>();
         }
     }
 }
