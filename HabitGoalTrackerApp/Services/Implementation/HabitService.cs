@@ -15,9 +15,14 @@ namespace HabitGoalTrackerApp.Services.Implementation
         }
         public async Task<Habit> CreateHabitAsync(CreateHabitViewModel model, string userId)
         {
+            Console.WriteLine($"Creating habit with RepeatType: {model.RepeatType}");
+            Console.WriteLine($"Custom days count: {model.CustomDays.Count}");
+
             var customDaysJson = model.RepeatType == RepeatType.Custom && model.CustomDays.Any()
                 ? System.Text.Json.JsonSerializer.Serialize(model.CustomDays.ToArray())
                 : null;
+
+            Console.WriteLine($"Custom days JSON: {customDaysJson}");
 
             var habit = new Habit
             {
@@ -34,6 +39,9 @@ namespace HabitGoalTrackerApp.Services.Implementation
 
             _context.Habits.Add(habit);
             await _context.SaveChangesAsync();
+
+            Console.WriteLine($"Habit saved with RepeatType: {habit.RepeatType}, CustomDays: {habit.CustomDays}");
+
             return habit;
         }
 
@@ -118,6 +126,9 @@ namespace HabitGoalTrackerApp.Services.Implementation
 
             var weeklyRate = totalScheduledDays > 0 ? (double)totalCompletedDays / totalScheduledDays * 100 : 0;
 
+            var goalService = new GoalService(_context);
+            var activeGoals = await goalService.GetActiveGoalsSummaryAsync(userId);
+
             return new DashboardViewModel
             {
                 UserName = userId,
@@ -126,7 +137,7 @@ namespace HabitGoalTrackerApp.Services.Implementation
                 CurrentLongestStreak = longestStreak,
                 WeeklyCompletionRate = Math.Round(weeklyRate, 1),
                 TodaysHabits = habitsList.Where(h => h.IsScheduledToday).Take(5).ToList(),
-                ActiveGoals = new List<GoalSummaryViewModel>()
+                ActiveGoals = activeGoals.ToList()
             };
         }
 
@@ -246,9 +257,14 @@ namespace HabitGoalTrackerApp.Services.Implementation
             var habit = await GetHabitByIdAsync(id, userId);
             if (habit == null) return false;
 
+            Console.WriteLine($"Updating habit with RepeatType: {model.RepeatType}");
+            Console.WriteLine($"Custom days count: {model.CustomDays.Count}");
+
             var customDaysJson = model.RepeatType == RepeatType.Custom && model.CustomDays.Any()
                 ? System.Text.Json.JsonSerializer.Serialize(model.CustomDays.ToArray())
                 : null;
+
+            Console.WriteLine($"CustomDays JSON: {customDaysJson}");
 
             habit.Title = model.Title;
             habit.Description = model.Description;
@@ -259,6 +275,9 @@ namespace HabitGoalTrackerApp.Services.Implementation
             habit.CustomDays = customDaysJson;
 
             await _context.SaveChangesAsync();
+
+            Console.WriteLine($"Updated habit with RepeatType: {habit.RepeatType}, CustomDays: {habit.CustomDays}");
+
             return true;
         }
 

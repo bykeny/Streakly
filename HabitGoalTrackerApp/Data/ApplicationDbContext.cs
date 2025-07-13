@@ -63,6 +63,10 @@ namespace HabitGoalTrackerApp.Data
             builder.Entity<Habit>()
                 .Property(h => h.RepeatType)
                 .HasConversion<int>();
+
+            builder.Entity<Goal>()
+                .Property(g => g.Category)
+                .HasConversion<int>();
         }
     }
 }

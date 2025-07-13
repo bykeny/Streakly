@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HabitGoalTrackerApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff0f65a8a6c0cdd8b8d93001df7df3284540ee3d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+349b84e7e3b323627eac01e93dfbd23f4633c532")]
 [assembly: System.Reflection.AssemblyProductAttribute("HabitGoalTrackerApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HabitGoalTrackerApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

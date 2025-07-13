@@ -54,7 +54,7 @@ namespace HabitGoalTrackerApp.Controllers
                     Title = habit.Title,
                     Description = habit.Description,
                     IconName = habit.IconName,
-                    Color = habit.Color ?? "#FFFFFF",
+                    Color = habit.Color,
                     IsActive = habit.IsActive,
                     CreatedAt = habit.CreatedAt,
                     CurrentStreak = streak,
@@ -103,7 +103,7 @@ namespace HabitGoalTrackerApp.Controllers
                 Title = habit.Title,
                 Description = habit.Description,
                 IconName = habit.IconName,
-                Color = habit.Color ?? "#FFFFFF",
+                Color = habit.Color,
                 IsActive = habit.IsActive,
                 CreatedAt = habit.CreatedAt,
                 CurrentStreak = currentStreak,
@@ -151,14 +151,34 @@ namespace HabitGoalTrackerApp.Controllers
                 return NotFound();
             }
 
+            var customDays = new List<int>();
+            if (habit.RepeatType == RepeatType.Custom && !string.IsNullOrEmpty(habit.CustomDays))
+            {
+                try
+                {
+                    var parsedDays = System.Text.Json.JsonSerializer.Deserialize<int[]>(habit.CustomDays);
+                    if (parsedDays != null)
+                    {
+                        customDays = parsedDays.ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error parsing custom days: {ex.Message}");
+                    throw;
+                }
+            }
+
             var viewModel = new EditHabitViewModel
             {
                 Id = habit.Id,
                 Title = habit.Title,
                 Description = habit.Description,
                 IconName = habit.IconName,
-                Color = habit.Color ?? "#FFFFFF",
-                IsActive = habit.IsActive
+                Color = habit.Color,
+                IsActive = habit.IsActive,
+                RepeatType = habit.RepeatType,
+                CustomDays = customDays
             };
 
             return View(viewModel);

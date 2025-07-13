@@ -207,123 +207,139 @@
 
 <!-- Inline JavaScript - This ensures DOM is ready and model data is available -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize repeat type from model
-    const repeatType = '@((int)Model.RepeatType)';
-    const repeatRadio = document.querySelector(`input[name="RepeatType"][value="${repeatType}"]`);
-    if (repeatRadio) {
-        repeatRadio.checked = true;
-        if (repeatType === '3') {
-            document.getElementById('customDaysContainer').style.display = 'block';
-            
-            // Initialize custom days if they exist
-            @if (Model.RepeatType == HabitGoalTrackerApp.Models.RepeatType.Custom && Model.CustomDays != null && Model.CustomDays.Any())
-            {
-                <text>
-                const customDays = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CustomDays));
-                customDays.forEach(day => {
-                    const checkbox = document.querySelector(`.custom-day[value="${day}"]`);
-                    if (checkbox) checkbox.checked = true;
-                });
-                </text>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize repeat type from model
+        const repeatType = '@((int)Model.RepeatType)';
+        console.log('Initializing with RepeatType:', repeatType);
+
+        const repeatRadio = document.querySelector(`input[name="RepeatType"][value="${repeatType}"]`);
+        if (repeatRadio) {
+            repeatRadio.checked = true;
+            console.log('Set radio button for RepeatType:', repeatType);
+
+            if (repeatType === '3') {
+                document.getElementById('customDaysContainer').style.display = 'block';
+                console.log('Showing custom days container');
+
+                // Initialize custom days if they exist
+                @if (Model.RepeatType == HabitGoalTrackerApp.Models.RepeatType.Custom && Model.CustomDays != null && Model.CustomDays.Any())
+                {
+                    <text>
+                                    const customDays = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CustomDays));
+                                    console.log('Setting custom days:', customDays);
+                                    customDays.forEach(day => {
+                                        const checkbox = document.querySelector(`.custom-day[value="${day}"]`);
+                                        if (checkbox) {
+                                            checkbox.checked = true;
+                                            console.log('Checked day:', day);
+                                        }
+                                    });
+                    </text>
+                }
             }
+        } else {
+            console.log('Could not find radio button for RepeatType:', repeatType);
         }
-    }
 
     // Color picker functionality
-    document.querySelectorAll('.color-option').forEach(option => {
-        option.addEventListener('click', function() {
-            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            
-            const color = this.dataset.color;
-            document.getElementById('selectedColor').value = color;
-            document.getElementById('previewIcon').style.backgroundColor = color;
-        });
-    });
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
 
-    // Icon picker functionality
-    document.querySelectorAll('.icon-option').forEach(option => {
-        option.addEventListener('click', function() {
-            document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            
-            const icon = this.dataset.icon;
-            document.getElementById('selectedIcon').value = icon;
-            
-            const previewIcon = document.getElementById('previewIcon');
-            previewIcon.innerHTML = this.innerHTML;
+                const color = this.dataset.color;
+                document.getElementById('selectedColor').value = color;
+                document.getElementById('previewIcon').style.backgroundColor = color;
+            });
         });
-    });
 
-    // Repeat schedule functionality
-    document.querySelectorAll('.repeat-type-radio').forEach(radio => {
-        radio.addEventListener('change', function() {
-            const customContainer = document.getElementById('customDaysContainer');
-            if (this.value === '3') { // Custom
-                customContainer.style.display = 'block';
-            } else {
-                customContainer.style.display = 'none';
-                // Clear custom day selections
-                document.querySelectorAll('.custom-day').forEach(cb => cb.checked = false);
-            }
-            updatePreviewSchedule();
+        // Icon picker functionality
+        document.querySelectorAll('.icon-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+
+                const icon = this.dataset.icon;
+                document.getElementById('selectedIcon').value = icon;
+
+                const previewIcon = document.getElementById('previewIcon');
+                previewIcon.innerHTML = this.innerHTML;
+            });
         });
-    });
+
+        // Repeat schedule functionality
+        document.querySelectorAll('.repeat-type-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const customContainer = document.getElementById('customDaysContainer');
+                if (this.value === '3') { // Custom
+                    customContainer.style.display = 'block';
+                } else {
+                    customContainer.style.display = 'none';
+                    // Clear custom day selections
+                    document.querySelectorAll('.custom-day').forEach(cb => cb.checked = false);
+                }
+                updatePreviewSchedule();
+            });
+        });
 
     // Custom days change handler
     document.querySelectorAll('.custom-day').forEach(checkbox => {
         checkbox.addEventListener('change', updatePreviewSchedule);
     });
 
-    // Live preview updates
-    const nameInput = document.getElementById('Name');
-    const descriptionInput = document.getElementById('Description');
-    
-    if (nameInput) {
-        nameInput.addEventListener('input', function() {
-            document.getElementById('previewName').textContent = this.value || 'Habit name';
+        // Custom days change handler
+        document.querySelectorAll('.custom-day').forEach(checkbox => {
+            checkbox.addEventListener('change', updatePreviewSchedule);
         });
-    }
 
-    if (descriptionInput) {
-        descriptionInput.addEventListener('input', function() {
-            document.getElementById('previewDescription').textContent = this.value || 'Description';
-        });
-    }
+        // Live preview updates
+        const nameInput = document.getElementById('Name');
+        const descriptionInput = document.getElementById('Description');
 
-    function updatePreviewSchedule() {
-        const selectedRepeat = document.querySelector('.repeat-type-radio:checked');
-        const previewSchedule = document.getElementById('previewSchedule');
-        
-        if (!selectedRepeat) return;
-        
-        let scheduleText = '';
-        switch(selectedRepeat.value) {
-            case '0':
-                scheduleText = 'Every day';
-                break;
-            case '1':
-                scheduleText = 'Weekdays (Mon-Fri)';
-                break;
-            case '2':
-                scheduleText = 'Weekends (Sat-Sun)';
-                break;
-            case '3':
-                const selectedDays = Array.from(document.querySelectorAll('.custom-day:checked'))
-                    .map(cb => {
-                        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                        return dayNames[parseInt(cb.value)];
-                    });
-                scheduleText = selectedDays.length > 0 ? selectedDays.join(', ') : 'Select days';
-                break;
+        if (nameInput) {
+            nameInput.addEventListener('input', function() {
+                document.getElementById('previewName').textContent = this.value || 'Habit name';
+            });
         }
-        
-        previewSchedule.textContent = scheduleText;
-    }
 
-    // Initialize preview
-    updatePreviewSchedule();
+        if (descriptionInput) {
+            descriptionInput.addEventListener('input', function() {
+                document.getElementById('previewDescription').textContent = this.value || 'Description';
+            });
+        }
+
+        function updatePreviewSchedule() {
+            const selectedRepeat = document.querySelector('.repeat-type-radio:checked');
+            const previewSchedule = document.getElementById('previewSchedule');
+
+            if (!selectedRepeat) return;
+
+            let scheduleText = '';
+            switch(selectedRepeat.value) {
+                case '0':
+                    scheduleText = 'Every day';
+                    break;
+                case '1':
+                    scheduleText = 'Weekdays (Mon-Fri)';
+                    break;
+                case '2':
+                    scheduleText = 'Weekends (Sat-Sun)';
+                    break;
+                case '3':
+                    const selectedDays = Array.from(document.querySelectorAll('.custom-day:checked'))
+                        .map(cb => {
+                            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                            return dayNames[parseInt(cb.value)];
+                        });
+                    scheduleText = selectedDays.length > 0 ? selectedDays.join(', ') : 'Select days';
+                    break;
+            }
+
+            previewSchedule.textContent = scheduleText;
+        }
+
+        // Initialize preview
+        updatePreviewSchedule();
 });
 </script>
 

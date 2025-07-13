@@ -64,6 +64,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Goals/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR29hbHNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Goals/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR29hbHNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Goals/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR29hbHNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Goals/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR29hbHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Goals/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR29hbHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Habits/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGFiaXRzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
