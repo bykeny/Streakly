@@ -28,6 +28,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IHabitService, HabitService>();
 builder.Services.AddScoped<IGoalService, GoalService>();
+builder.Services.AddScoped<ICalendarService, CalendarService>();
 
 var app = builder.Build();
 

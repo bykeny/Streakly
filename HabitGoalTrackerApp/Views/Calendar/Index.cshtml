@@ -1,0 +1,660 @@
+﻿@model HabitGoalTrackerApp.Models.ViewModels.CalendarViewModel
+
+@{
+    ViewData["Title"] = "Calendar View";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Calendar View</h1>
+        <p class="text-muted mb-0">Track your habits and goals over time</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Heatmap" class="btn btn-outline-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            Heatmap View
+        </a>
+        <button class="btn btn-outline-secondary" id="exportBtn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Export
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Calendar Navigation and Stats -->
+    <div class="col-lg-3">
+        <!-- Month Navigation -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-outline-primary btn-sm" id="prevMonth">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <h5 class="mb-0" id="currentMonthYear">@Model.MonthName @Model.Year</h5>
+                    <button class="btn btn-outline-primary btn-sm" id="nextMonth">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+                <button class="btn btn-primary btn-sm w-100" id="todayBtn">Today</button>
+            </div>
+        </div>
+
+        <!-- Monthly Stats -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Monthly Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Active Habits</span>
+                        <span class="h5 mb-0 text-primary">@Model.Stats.TotalActiveHabits</span>
+                    </div>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Avg. Completion</span>
+                        <span class="h5 mb-0 text-info">@Model.Stats.AverageCompletionRate%</span>
+                    </div>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Best Day</span>
+                        <span class="h5 mb-0 text-success">@Model.Stats.BestDay%</span>
+                    </div>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Current Streak</span>
+                        <span class="h5 mb-0 text-warning">@Model.Stats.CurrentStreak</span>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Goal Progress</span>
+                        <span class="h5 mb-0 text-secondary">@Model.Stats.TotalGoalProgress</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habit Legend -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Habits Legend</h6>
+            </div>
+            <div class="card-body">
+                @if (Model.Habits.Any())
+                {
+                    @foreach (var habit in Model.Habits.Where(h => h.IsActive))
+                    {
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="habit-legend-color me-2" style="background-color: @habit.Color;"></div>
+                            <span class="small">@habit.Title</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <p class="text-muted small mb-2">No active habits</p>
+                        <a asp-controller="Habits" asp-action="Create" class="btn btn-primary btn-sm">Create Habit</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+                <div class="calendar-container">
+                    <!-- Calendar Header -->
+                    <div class="calendar-header">
+                        <div class="calendar-day-header">Sun</div>
+                        <div class="calendar-day-header">Mon</div>
+                        <div class="calendar-day-header">Tue</div>
+                        <div class="calendar-day-header">Wed</div>
+                        <div class="calendar-day-header">Thu</div>
+                        <div class="calendar-day-header">Fri</div>
+                        <div class="calendar-day-header">Sat</div>
+                    </div>
+
+                    <!-- Calendar Body -->
+                    <div class="calendar-body" id="calendarBody">
+                        @foreach (var week in Model.Weeks)
+                        {
+                            <div class="calendar-week">
+                                @foreach (var day in week.Days)
+                                {
+                                    <div class="calendar-day @(day.IsCurrentMonth ? "current-month" : "other-month") @(day.IsToday ? "today" : "")"
+                                         data-date="@day.Date.ToString("yyyy-MM-dd")"
+                                         data-bs-toggle="@(day.HasHabits || day.GoalProgress.Any() ? "popover" : "")"
+                                         data-bs-placement="top"
+                                         data-bs-html="true"
+                                         data-bs-content="@GetDayPopoverContent(day)">
+
+                                        <div class="calendar-day-number">@day.Date.Day</div>
+
+                                        @if (day.HasHabits)
+                                        {
+                                            <div class="calendar-day-progress">
+                                                <div class="progress-ring" style="--progress: @day.CompletionPercentage%">
+                                                    <div class="progress-text">@day.CompletedHabits/@day.TotalScheduledHabits</div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        @if (day.GoalProgress.Any())
+                                        {
+                                            <div class="goal-progress-indicator">
+                                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" class="text-success">
+                                                    <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                                </svg>
+                                                <span class="goal-count">@day.GoalProgress.Count</span>
+                                            </div>
+                                        }
+
+                                        <!-- Habit dots -->
+                                        @if (day.HabitStatuses.Any())
+                                        {
+                                            <div class="habit-dots">
+                                                @foreach (var habit in day.HabitStatuses.Take(4))
+                                                {
+                                                    <div class="habit-dot @(habit.IsCompleted ? "completed" : "pending")"
+                                                         style="background-color: @habit.Color;"
+                                                         title="@habit.HabitTitle - @(habit.IsCompleted ? "Completed" : "Pending")"></div>
+                                                }
+                                                @if (day.HabitStatuses.Count > 4)
+                                                {
+                                                    <div class="habit-dot more">+@(day.HabitStatuses.Count - 4)</div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Day Details Modal -->
+<div class="modal fade" id="dayDetailsModal" tabindex="-1" aria-labelledby="dayDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dayDetailsModalLabel">Day Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="dayDetailsContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentYear = @Model.Year;
+        let currentMonth = @Model.Month;
+
+        // Navigation buttons
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            currentMonth--;
+            if (currentMonth < 1) {
+                currentMonth = 12;
+                currentYear--;
+            }
+            loadCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            currentMonth++;
+            if (currentMonth > 12) {
+                currentMonth = 1;
+                currentYear++;
+            }
+            loadCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById('todayBtn').addEventListener('click', function() {
+            const today = new Date();
+            currentYear = today.getFullYear();
+            currentMonth = today.getMonth() + 1;
+            loadCalendar(currentYear, currentMonth);
+        });
+
+        // Export functionality
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            exportCalendar();
+        });
+
+        // Calendar day click handler
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.calendar-day')) {
+                const calendarDay = e.target.closest('.calendar-day');
+                const date = calendarDay.dataset.date;
+                if (date) {
+                    showDayDetails(date);
+                }
+            }
+        });
+
+        // Initialize popovers
+        initializePopovers();
+
+        function loadCalendar(year, month) {
+            // Show loading state
+            document.getElementById('calendarBody').style.opacity = '0.5';
+
+            fetch(`/Calendar/GetCalendarData?year=${year}&month=${month}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateCalendarDisplay(data);
+                    currentYear = year;
+                    currentMonth = month;
+                })
+                .catch(error => {
+                    console.error('Error loading calendar:', error);
+                    showToast('Failed to load calendar data', 'error');
+                })
+                .finally(() => {
+                    document.getElementById('calendarBody').style.opacity = '1';
+                });
+        }
+
+        function updateCalendarDisplay(data) {
+            // Update month/year display
+            document.getElementById('currentMonthYear').textContent = `${data.monthName} ${data.year}`;
+
+            // Update URL without page reload
+            const newUrl = `/Calendar?year=${data.year}&month=${data.month}`;
+            window.history.pushState({year: data.year, month: data.month}, '', newUrl);
+
+            // Here you would rebuild the calendar HTML with the new data
+            // For brevity, this is a simplified version
+            location.reload(); // In production, you'd update the DOM dynamically
+        }
+
+        function showDayDetails(date) {
+            const dayData = findDayData(date);
+            if (!dayData) return;
+
+            document.getElementById('dayDetailsModalLabel').textContent = `Details for ${new Date(date).toLocaleDateString()}`;
+
+            let content = '<div class="day-details">';
+
+            // Habits section
+            if (dayData.habits && dayData.habits.length > 0) {
+                content += '<h6 class="fw-semibold mb-3">Habits</h6>';
+                content += '<div class="row mb-4">';
+                dayData.habits.forEach(habit => {
+                    const status = habit.isCompleted ? 'completed' : 'pending';
+                    const icon = habit.isCompleted ? '✓' : '○';
+                    content += `
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <div class="habit-dot ${status} me-2" style="background-color: ${habit.color};"></div>
+                                <span class="${habit.isCompleted ? 'text-success' : 'text-muted'}">${icon} ${habit.name}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+
+            // Goals section
+            if (dayData.goals && dayData.goals.length > 0) {
+                content += '<h6 class="fw-semibold mb-3">Goal Progress</h6>';
+                dayData.goals.forEach(goal => {
+                    content += `
+                        <div class="goal-progress-item mb-2 p-2 bg-light rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-medium">${goal.title}</span>
+                                <span class="text-success">+${goal.value} ${goal.unit}</span>
+                            </div>
+                            ${goal.notes ? `<small class="text-muted">${goal.notes}</small>` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            if (!dayData.habits?.length && !dayData.goals?.length) {
+                content += '<p class="text-muted text-center py-4">No activity recorded for this day</p>';
+            }
+
+            content += '</div>';
+
+            document.getElementById('dayDetailsContent').innerHTML = content;
+
+            const modal = new bootstrap.Modal(document.getElementById('dayDetailsModal'));
+            modal.show();
+        }
+
+        function findDayData(date) {
+            // This would find the day data from the current calendar model
+            // For now, return mock data
+            return {
+                habits: [
+                    {name: 'Morning Exercise', isCompleted: true, color: '#10b981'},
+                    {name: 'Read 30 minutes', isCompleted: false, color: '#3b82f6'}
+                ],
+                goals: [
+                    {title: 'Read 12 books', value: 0.5, unit: 'books', notes: 'Finished chapter 3'}
+                ]
+            };
+        }
+
+        function exportCalendar() {
+            // Simple export functionality
+            const calendarData = {
+                year: currentYear,
+                month: currentMonth,
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(calendarData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `calendar-${currentYear}-${currentMonth.toString().padStart(2, '0')}.json`;
+            link.click();
+        }
+
+        function initializePopovers() {
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl, {
+                    trigger: 'hover',
+                    delay: { show: 500, hide: 100 }
+                });
+            });
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(event) {
+            if (event.state) {
+                currentYear = event.state.year;
+                currentMonth = event.state.month;
+                loadCalendar(currentYear, currentMonth);
+            }
+        });
+    });
+</script>
+
+<style>
+    .calendar-container {
+        width: 100%;
+    }
+
+    .calendar-header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        margin-bottom: 1px;
+    }
+
+    .calendar-day-header {
+        padding: 0.75rem;
+        text-align: center;
+        font-weight: 600;
+        color: var(--text-secondary);
+        background-color: var(--bg-secondary);
+        font-size: 0.875rem;
+    }
+
+    .calendar-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .calendar-week {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+    }
+
+    .calendar-day {
+        min-height: 120px;
+        padding: 0.5rem;
+        background-color: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .calendar-day:hover {
+            background-color: var(--bg-secondary);
+            transform: scale(1.02);
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+
+        .calendar-day.today {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+    .calendar-day-number {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .progress-ring {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: conic-gradient(var(--success-color) var(--progress, 0%), var(--gray-200) 0%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0.25rem 0;
+        position: relative;
+    }
+
+        .progress-ring::before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--bg-primary);
+            position: absolute;
+        }
+
+    .progress-text {
+        font-size: 0.625rem;
+        font-weight: 600;
+        z-index: 1;
+    }
+
+    .goal-progress-indicator {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .goal-count {
+        font-size: 0.625rem;
+        font-weight: 600;
+        color: var(--success-color);
+    }
+
+    .habit-dots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px;
+        margin-top: auto;
+    }
+
+    .habit-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        opacity: 0.3;
+        transition: opacity 0.2s ease;
+    }
+
+        .habit-dot.completed {
+            opacity: 1;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .habit-dot.more {
+            background-color: var(--gray-400);
+            font-size: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+        }
+
+    .habit-legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .stat-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .day-details .habit-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    .goal-progress-item {
+        background-color: var(--bg-secondary) !important;
+    }
+
+@*    @media (max-width: 768px) {
+        .calendar-day
+
+    {
+        min-height: 80px;
+        padding: 0.25rem;
+    }
+
+    .progress-ring {
+        width: 30px;
+        height: 30px;
+    }
+
+        .progress-ring::before {
+            width: 22px;
+            height: 22px;
+        }
+
+    .progress-text {
+        font-size: 0.5rem;
+    }
+
+    .calendar-day-number {
+        font-size: 0.75rem;
+    }
+
+    } *@
+</style>
+
+@functions {
+    private string GetDayPopoverContent(HabitGoalTrackerApp.Models.ViewModels.CalendarDay day)
+    {
+        var content = $"<strong>{day.Date:MMM dd, yyyy}</strong><br/>";
+
+        if (day.HasHabits)
+        {
+            content += $"<small class='text-info'>Habits: {day.CompletedHabits}/{day.TotalScheduledHabits} completed ({Math.Round(day.CompletionPercentage, 0)}%)</small><br/>";
+            foreach (var habit in day.HabitStatuses.Take(3))
+            {
+                var status = habit.IsCompleted ? "✓" : "○";
+                var textClass = habit.IsCompleted ? "text-success" : "text-muted";
+                content += $"<small class='{textClass}'>{status} {habit.HabitTitle}</small><br/>";
+            }
+            if (day.HabitStatuses.Count > 3)
+            {
+                content += $"<small class='text-muted'>... and {day.HabitStatuses.Count - 3} more</small><br/>";
+            }
+        }
+
+        if (day.GoalProgress.Any())
+        {
+            content += $"<small class='text-success'><strong>Goal Progress ({day.GoalProgress.Count}):</strong></small><br/>";
+            foreach (var progress in day.GoalProgress.Take(2))
+            {
+                content += $"<small class='text-success'>⚡ {progress.GoalTitle}: +{progress.ProgressValue} {progress.Unit}</small><br/>";
+            }
+            if (day.GoalProgress.Count > 2)
+            {
+                content += $"<small class='text-muted'>... and {day.GoalProgress.Count - 2} more</small><br/>";
+            }
+        }
+
+        if (!day.HasHabits && !day.GoalProgress.Any())
+        {
+            content += "<small class='text-muted'>No activity recorded</small>";
+        }
+
+        return content;
+    }
+}
