@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HabitGoalTrackerApp.Models;
 
 namespace HabitGoalTrackerApp.Models.ViewModels
 {
@@ -88,7 +89,7 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public GoalCategory Category { get; set; }
         public decimal ProgressPercentage { get; set; }
         public bool IsCompleted { get; set; }
-        public bool IsOverDue { get; set; }
+        public bool IsOverdue { get; set; }
         public int DaysRemaining { get; set; }
         public string CategoryDisplay { get; set; } = string.Empty;
         public string StatusDisplay { get; set; } = string.Empty;
@@ -108,7 +109,7 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public GoalCategory Category { get; set; }
         public decimal ProgressPercentage { get; set; }
         public bool IsCompleted { get; set; }
-        public bool IsOverDue { get; set; }
+        public bool IsOverdue { get; set; }
         public int DaysRemaining { get; set; }
         public string CategoryDisplay { get; set; } = string.Empty;
         public string StatusDisplay { get; set; } = string.Empty;

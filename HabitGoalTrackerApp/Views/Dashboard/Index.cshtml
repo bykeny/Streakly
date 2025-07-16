@@ -137,27 +137,29 @@
                 </div>
 
                 <div class="goal-list">
-                    <div class="goal-card">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="mb-0">Read 12 books this year</h6>
-                            <small class="text-muted">7/12</small>
+                    @if (Model.ActiveGoals.Any())
+                    {
+                        @foreach (var goal in Model.ActiveGoals)
+                        {
+                            <div class="goal-card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">@goal.Title</h6>
+                                    <small class="text-muted">@goal.CurrentValue/@goal.TargetValue @goal.Unit</small>
+                                </div>
+                                <div class="progress mb-2" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" style="width: @goal.ProgressPercentage%"></div>
+                                </div>
+                                <small class="text-muted">@Math.Round(goal.ProgressPercentage, 1)% complete</small>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-3">
+                            <p class="text-muted mb-2">No active goals</p>
+                            <a asp-controller="Goals" asp-action="Create" class="btn btn-primary btn-sm">Create Your First Goal</a>
                         </div>
-                        <div class="progress mb-2" style="height: 8px;">
-                            <div class="progress-bar bg-primary" style="width: 58%"></div>
-                        </div>
-                        <small class="text-muted">58% complete</small>
-                    </div>
-
-                    <div class="goal-card">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="mb-0">Lose 10 pounds</h6>
-                            <small class="text-muted">6/10 lbs</small>
-                        </div>
-                        <div class="progress mb-2" style="height: 8px;">
-                            <div class="progress-bar bg-success" style="width: 60%"></div>
-                        </div>
-                        <small class="text-muted">60% complete</small>
-                    </div>
+                    }
                 </div>
 
                 <div class="text-center mt-4">

@@ -9,9 +9,12 @@ namespace HabitGoalTrackerApp.Services.Implementation
     public class HabitService : IHabitService
     {
         private readonly ApplicationDbContext _context;
-        public HabitService(ApplicationDbContext dbContext)
+        private readonly IGoalService _goalService;
+        public HabitService(ApplicationDbContext dbContext, IGoalService goalService)
         {
             _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            //this.goalService = goalService ?? throw new ArgumentNullException(nameof(goalService));
+            _goalService = goalService;
         }
         public async Task<Habit> CreateHabitAsync(CreateHabitViewModel model, string userId)
         {
@@ -126,8 +129,8 @@ namespace HabitGoalTrackerApp.Services.Implementation
 
             var weeklyRate = totalScheduledDays > 0 ? (double)totalCompletedDays / totalScheduledDays * 100 : 0;
 
-            var goalService = new GoalService(_context);
-            var activeGoals = await goalService.GetActiveGoalsSummaryAsync(userId);
+            //var goalService = new GoalService(_context);
+            var activeGoals = await _goalService.GetActiveGoalsSummaryAsync(userId);
 
             return new DashboardViewModel
             {
@@ -137,7 +140,8 @@ namespace HabitGoalTrackerApp.Services.Implementation
                 CurrentLongestStreak = longestStreak,
                 WeeklyCompletionRate = Math.Round(weeklyRate, 1),
                 TodaysHabits = habitsList.Where(h => h.IsScheduledToday).Take(5).ToList(),
-                ActiveGoals = activeGoals.ToList()
+                //ActiveGoals = activeGoals.ToList()
+                ActiveGoals = new List<GoalSummaryViewModel>()
             };
         }
 

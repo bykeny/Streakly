@@ -61,12 +61,10 @@ C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\ne
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Composition.Runtime.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Composition.TypedParts.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Formats.Asn1.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Memory.Data.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Runtime.Caching.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\System.Text.Json.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -279,12 +277,6 @@ C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\ne
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets.development.json
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets\msbuild.HabitGoalTrackerApp.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets\msbuild.HabitGoalTrackerApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets\msbuild.build.HabitGoalTrackerApp.props
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.HabitGoalTrackerApp.props
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.HabitGoalTrackerApp.props
-C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets.pack.json
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\HabitGoa.8C4A1A52.Up2Date
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\HabitGoalTrackerApp.dll
@@ -437,3 +429,8 @@ C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\ne
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\HabitGoalTrackerApp.sourcelink.json
 C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\compressed\xbt72p170e-7te5wg1qz0.gz
+C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Users\kenan\source\repos\HabitGoalTrackerApp\HabitGoalTrackerApp\obj\Debug\net9.0\staticwebassets.build.json.cache

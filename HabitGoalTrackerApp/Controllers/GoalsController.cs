@@ -47,7 +47,7 @@ namespace HabitGoalTrackerApp.Controllers
                 Category = g.Category,
                 ProgressPercentage = g.ProgressPercentage,
                 IsCompleted = g.IsCompleted,
-                IsOverDue = g.isOverDue,
+                IsOverdue = g.IsOverdue,
                 DaysRemaining = g.DaysRemaining,
                 CategoryDisplay = g.GetCategoryDisplay(),
                 StatusDisplay = g.GetStatusDisplay()
@@ -99,7 +99,7 @@ namespace HabitGoalTrackerApp.Controllers
                 Category = goal.Category,
                 ProgressPercentage = goal.ProgressPercentage,
                 IsCompleted = goal.IsCompleted,
-                IsOverDue = goal.isOverDue,
+                IsOverdue = goal.IsOverdue,
                 DaysRemaining = goal.DaysRemaining,
                 CategoryDisplay = goal.GetCategoryDisplay(),
                 StatusDisplay = goal.GetStatusDisplay(),
@@ -125,12 +125,19 @@ namespace HabitGoalTrackerApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = _userManager.GetUserId(User)!;
-                await _goalService.CreateGoalAsync(model, userId);
-                TempData["SuccessMessage"] = "Goal created successfully!";
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var userId = _userManager.GetUserId(User)!;
+                    await _goalService.CreateGoalAsync(model, userId);
+                    TempData["SuccessMessage"] = "Goal created successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    ModelState.AddModelError("", "An error occurred while creating the goal. Please try again.");
+                }
             }
-
             return View(model);
         }
 
@@ -254,17 +261,44 @@ namespace HabitGoalTrackerApp.Controllers
 
         // POST: Goals/DeleteProgress/5
         [HttpPost]
+        //public async Task<IActionResult> DeleteProgress(int id)
+        //{
+        //    var userId = _userManager.GetUserId(User)!;
+        //    var success = await _goalService.DeleteProgressAsync(id, userId);
+
+        //    if (success)
+        //    {
+        //        return Json(new { success = true, message = "Progress entry deleted successfully!" });
+        //    }
+
+        //    return Json(new { success = false, message = "Failed to delete progress entry." });
+        //}
+
         public async Task<IActionResult> DeleteProgress(int id)
         {
             var userId = _userManager.GetUserId(User)!;
             var success = await _goalService.DeleteProgressAsync(id, userId);
 
-            if (success)
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return Json(new { success = true, message = "Progress entry deleted successfully!" });
+                if (success)
+                {
+                    return Json(new { success = true, message = "Progress entry deleted successfully!" });
+                }
+                return Json(new { success = false, message = "Failed to delete progress entry." });
             }
 
-            return Json(new { success = false, message = "Failed to delete progress entry." });
+            // For non-AJAX requests
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Progress entry deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to delete progress entry.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

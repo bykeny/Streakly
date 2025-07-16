@@ -32,7 +32,7 @@ namespace HabitGoalTrackerApp.Models
 
         public virtual ICollection<GoalProgress> ProgressEntries { get; set; } = new List<GoalProgress>();
 
-        public bool isOverDue => TargetDate.HasValue && TargetDate.Value.Date < DateTime.Today && !IsCompleted;
+        public bool IsOverdue => TargetDate.HasValue && TargetDate.Value.Date < DateTime.Today && !IsCompleted;
         public int DaysRemaining => TargetDate.HasValue ? Math.Max(0, (TargetDate.Value.Date - DateTime.Today).Days) : 0;
 
         public string GetCategoryDisplay()
@@ -56,7 +56,7 @@ namespace HabitGoalTrackerApp.Models
         public string GetStatusDisplay()
         {
             if (IsCompleted) return "Completed";
-            if (isOverDue) return "Overdue";
+            if (IsOverdue) return "Overdue";
             if (TargetDate.HasValue && DaysRemaining <= 7) return "Due Soon";
             return "In Progress";
         }

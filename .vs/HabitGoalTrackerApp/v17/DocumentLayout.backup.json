@@ -3,28 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\services\\implementation\\habitservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\services\\implementation\\habitservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\services\\interfaces\\igoalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\services\\interfaces\\igoalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\controllers\\goalscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\controllers\\goalscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\services\\implementation\\goalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\services\\implementation\\goalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\models\\goal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -33,6 +13,38 @@
     {
       "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\models\\viewmodels\\goalviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\models\\viewmodels\\goalviewmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\views\\goals\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\views\\goals\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\views\\goals\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\views\\goals\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\services\\implementation\\goalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\services\\implementation\\goalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\views\\goals\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\views\\goals\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\views\\goals\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\views\\goals\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\services\\implementation\\habitservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\services\\implementation\\habitservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|c:\\users\\kenan\\source\\repos\\habitgoaltrackerapp\\habitgoaltrackerapp\\views\\goals\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{468A5E68-EF49-44B3-AD56-6A03546553FE}|HabitGoalTrackerApp\\HabitGoalTrackerApp.csproj|solutionrelative:habitgoaltrackerapp\\views\\goals\\delete.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,110 +54,153 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 8,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "HabitService.cs",
-              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
-              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
-              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
-              "RelativeToolTip": "HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
-              "ViewState": "AgIAAGIAAAAAAAAAAAAIwIEAAABTAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-13T19:17:08.536Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "Goal.cs",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Models\\Goal.cs",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Models\\Goal.cs",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Models\\Goal.cs",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Models\\Goal.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T19:16:43.621Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Controllers\\DashboardController.cs",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T18:39:38.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Edit.cshtml",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Views\\Goals\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Edit.cshtml",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Views\\Goals\\Edit.cshtml",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAK4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T19:50:44.185Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Create.cshtml",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Views\\Goals\\Create.cshtml",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Create.cshtml",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Views\\Goals\\Create.cshtml",
+              "ViewState": "AgIAAFkBAAAAAAAAAAAAAFkBAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T19:49:31.232Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Details.cshtml",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Views\\Goals\\Details.cshtml",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Details.cshtml",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Views\\Goals\\Details.cshtml",
+              "ViewState": "AgIAAKMBAAAAAAAAAAAqwMkBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T19:47:26.721Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Index.cshtml",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Views\\Goals\\Index.cshtml",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Index.cshtml",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Views\\Goals\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T19:37:48.96Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "HabitService.cs",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Services\\Implementation\\HabitService.cs",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAIwI8AAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-13T19:17:08.536Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "GoalsController.cs",
               "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Controllers\\GoalsController.cs",
               "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Controllers\\GoalsController.cs",
               "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Controllers\\GoalsController.cs",
               "RelativeToolTip": "HabitGoalTrackerApp\\Controllers\\GoalsController.cs",
-              "ViewState": "AgIAAO0AAAAAAAAAAAAIwAsBAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAwwIwAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-09T12:57:54.246Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "GoalService.cs",
               "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Implementation\\GoalService.cs",
               "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Services\\Implementation\\GoalService.cs",
               "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Implementation\\GoalService.cs",
               "RelativeToolTip": "HabitGoalTrackerApp\\Services\\Implementation\\GoalService.cs",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAAAHkAAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAkwHkAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-09T09:51:10.018Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "IGoalService.cs",
-              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Interfaces\\IGoalService.cs",
-              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Services\\Interfaces\\IGoalService.cs",
-              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Services\\Interfaces\\IGoalService.cs",
-              "RelativeToolTip": "HabitGoalTrackerApp\\Services\\Interfaces\\IGoalService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-09T08:55:08.964Z",
+              "WhenOpened": "2025-07-09T09:51:10.018Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Program.cs",
-              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Program.cs",
-              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Program.cs",
-              "RelativeToolTip": "HabitGoalTrackerApp\\Program.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB0AAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T19:29:03.073Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "HabitGoalTrackerApp\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-09T09:42:29.167Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Goal.cs",
-              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Models\\Goal.cs",
-              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Models\\Goal.cs",
-              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Models\\Goal.cs",
-              "RelativeToolTip": "HabitGoalTrackerApp\\Models\\Goal.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAIwDwAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-09T09:29:47.155Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "GoalViewModels.cs",
               "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Models\\ViewModels\\GoalViewModels.cs",
               "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Models\\ViewModels\\GoalViewModels.cs",
               "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Models\\ViewModels\\GoalViewModels.cs",
               "RelativeToolTip": "HabitGoalTrackerApp\\Models\\ViewModels\\GoalViewModels.cs",
-              "ViewState": "AgIAAGsAAAAAAAAAAAAYwH4AAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-09T09:03:20.802Z"
+              "WhenOpened": "2025-07-09T09:03:20.802Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Delete.cshtml",
+              "RelativeDocumentMoniker": "HabitGoalTrackerApp\\Views\\Goals\\Delete.cshtml",
+              "ToolTip": "C:\\Users\\kenan\\source\\repos\\HabitGoalTrackerApp\\HabitGoalTrackerApp\\Views\\Goals\\Delete.cshtml",
+              "RelativeToolTip": "HabitGoalTrackerApp\\Views\\Goals\\Delete.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-13T19:51:34.449Z"
             }
           ]
         }

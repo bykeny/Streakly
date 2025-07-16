@@ -11,18 +11,24 @@ namespace HabitGoalTrackerApp.Controllers
     public class DashboardController : Controller
     {
         private readonly IHabitService _habitService;
+        private readonly IGoalService _goalService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DashboardController(IHabitService habitService, UserManager<ApplicationUser> userManager)
+        public DashboardController(IHabitService habitService, IGoalService goalService, UserManager<ApplicationUser> userManager)
         {
             _habitService = habitService;
+            _goalService = goalService;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User)!;
+
             var dashboardData = await _habitService.GetDashboardDataAsync(userId);
+            var activeGoals = await _goalService.GetActiveGoalsSummaryAsync(userId);
+
+            dashboardData.ActiveGoals = activeGoals.ToList();
 
             return View(dashboardData);
         }
