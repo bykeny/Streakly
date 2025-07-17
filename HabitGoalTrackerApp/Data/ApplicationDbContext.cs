@@ -15,6 +15,7 @@ namespace HabitGoalTrackerApp.Data
         public DbSet<HabitCompletion> HabitCompletions { get; set; }
         public DbSet<Goal> Goals { get; set; }
         public DbSet<GoalProgress> GoalProgresses { get; set; }
+        public DbSet<JournalEntry> JournalEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -67,6 +68,16 @@ namespace HabitGoalTrackerApp.Data
             builder.Entity<Goal>()
                 .Property(g => g.Category)
                 .HasConversion<int>();
+
+            builder.Entity<JournalEntry>()
+                .Property(j => j.Mood)
+                .HasConversion<int>();
+
+            builder.Entity<JournalEntry>()
+                .HasOne(j => j.User)
+                .WithMany()
+                .HasForeignKey(j => j.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

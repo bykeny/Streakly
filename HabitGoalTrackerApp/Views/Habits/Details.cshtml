@@ -30,7 +30,7 @@
         <!-- Habit Overview Card -->
         <div class="card mb-4">
             <div class="card-body">
-                <div class="d-flex align-items-center mb-4">
+                @* <div class="d-flex align-items-center mb-4">
                     <div class="habit-icon me-4" style="background-color: @(Model.Color ?? "#3b82f6"); width: 64px; height: 64px;">
                         <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -73,6 +73,31 @@
                                 }
                             </button>
                         }
+                    </div>
+                </div> *@
+                <div class="d-flex align-items-center mb-4">
+                    <div class="habit-icon-large me-4" style="background-color: @Model.Color;">
+                        @if (!string.IsNullOrEmpty(Model.IconName))
+                        {
+                            @await Html.PartialAsync("_HabitIcon", Model.IconName)
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync("_HabitIcon", "default")
+                        }
+                    </div>
+                    <div>
+                        <h1 class="h2 mb-1">@Model.Title</h1>
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="text-muted mb-2">@Model.Description</p>
+                        }
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-primary">@Model.RepeatScheduleDisplay</span>
+                            <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary")">
+                                @(Model.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -417,5 +442,20 @@
         .stat-item:last-child {
             border-bottom: none;
             padding-bottom: 0;
+        }
+
+    .habit-icon-large {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+        .habit-icon-large svg {
+            width: 30px;
+            height: 30px;
         }
 </style>

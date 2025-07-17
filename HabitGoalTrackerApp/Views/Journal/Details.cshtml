@@ -1,0 +1,373 @@
+﻿@model HabitGoalTrackerApp.Models.ViewModels.JournalEntryDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">@Model.Title</h1>
+        <p class="text-muted mb-0">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            @Model.CreatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt")
+            @if (Model.UpdatedAt != Model.CreatedAt)
+            {
+                <span class="ms-2">• Updated @Model.UpdatedAt.ToString("MMM dd 'at' h:mm tt")</span>
+            }
+        </p>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary favorite-btn" data-entry-id="@Model.Id">
+            <svg width="16" height="16" fill="@(Model.IsFavorite ? "currentColor" : "none")" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+            </svg>
+            @(Model.IsFavorite ? "Favorited" : "Add to Favorites")
+        </button>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Journal
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <!-- Entry Header -->
+                <div class="entry-header mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="mood-display me-3" style="color: @Model.MoodColor;">
+                                <div class="mood-emoji">@Model.MoodEmoji</div>
+                                <div class="mood-label">@Model.Mood</div>
+                            </div>
+                        </div>
+                        <div class="entry-stats">
+                            <span class="stat-item">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                @Model.WordCount words
+                            </span>
+                            <span class="stat-item ms-3">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"></path>
+                                </svg>
+                                @Model.CharacterCount characters
+                            </span>
+                        </div>
+                    </div>
+
+                    @if (Model.Tags.Any())
+                    {
+                        <div class="entry-tags mb-3">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <a asp-action="Index" asp-route-tag="@tag" class="badge bg-light text-dark me-1 text-decoration-none">#@tag</a>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Entry Content -->
+                <div class="entry-content">
+                    @Html.Raw(Html.Encode(Model.Content).Replace("\n", "<br />"))
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Edit Entry
+                    </a>
+
+                    <button class="btn btn-outline-secondary share-btn">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                        </svg>
+                        Share Entry
+                    </button>
+
+                    <button class="btn btn-outline-info export-btn">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Export as PDF
+                    </button>
+
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete Entry
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Entry Info -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Entry Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="info-item mb-3">
+                    <div class="info-label">Created</div>
+                    <div class="info-value">@Model.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                    <div class="info-subvalue">@Model.CreatedAt.ToString("h:mm tt")</div>
+                </div>
+
+                @if (Model.UpdatedAt != Model.CreatedAt)
+                {
+                    <div class="info-item mb-3">
+                        <div class="info-label">Last Updated</div>
+                        <div class="info-value">@Model.UpdatedAt.ToString("MMMM dd, yyyy")</div>
+                        <div class="info-subvalue">@Model.UpdatedAt.ToString("h:mm tt")</div>
+                    </div>
+                }
+
+                <div class="info-item mb-3">
+                    <div class="info-label">Mood</div>
+                    <div class="info-value d-flex align-items-center">
+                        <span class="me-2" style="color: @Model.MoodColor;">@Model.MoodEmoji</span>
+                        @Model.Mood
+                    </div>
+                </div>
+
+                <div class="info-item mb-3">
+                    <div class="info-label">Word Count</div>
+                    <div class="info-value">@Model.WordCount words</div>
+                    <div class="info-subvalue">@Model.CharacterCount characters</div>
+                </div>
+
+                @if (Model.Tags.Any())
+                {
+                    <div class="info-item">
+                        <div class="info-label">Tags</div>
+                        <div class="info-value">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <span class="badge bg-light text-dark me-1">#@tag</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden data for JavaScript -->
+<script type="application/json" id="entryData">
+    {
+        "id": @Model.Id,
+        "title": @Json.Serialize(Model.Title),
+        "content": @Json.Serialize(Model.Content.Length > 100 ? Model.Content.Substring(0, 100) + "..." : Model.Content),
+        "createdAt": @Json.Serialize(Model.CreatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt")),
+        "mood": @Json.Serialize(Model.Mood.ToString())
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get entry data from JSON script tag
+        const entryData = JSON.parse(document.getElementById('entryData').textContent);
+
+        // Favorite toggle functionality
+        document.querySelector('.favorite-btn').addEventListener('click', function() {
+            const entryId = this.dataset.entryId;
+            const svg = this.querySelector('svg');
+            const buttonText = this;
+
+            fetch(`/Journal/ToggleFavorite/${entryId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const currentFill = svg.getAttribute('fill');
+                    const isFavorited = currentFill !== 'none';
+
+                    svg.setAttribute('fill', isFavorited ? 'none' : 'currentColor');
+                    buttonText.innerHTML = buttonText.innerHTML.replace(
+                        isFavorited ? 'Favorited' : 'Add to Favorites',
+                        isFavorited ? 'Add to Favorites' : 'Favorited'
+                    );
+
+                    // Visual feedback
+                    this.classList.add('btn-warning');
+                    setTimeout(() => {
+                        this.classList.remove('btn-warning');
+                    }, 200);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Share functionality
+        document.querySelector('.share-btn').addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: entryData.title,
+                    text: entryData.content,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast('Link copied to clipboard!', 'success');
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = window.location.href;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showToast('Link copied to clipboard!', 'success');
+                });
+            }
+        });
+
+        // Export functionality
+        document.querySelector('.export-btn').addEventListener('click', function() {
+            const content = `${entryData.title}
+
+    Created: ${entryData.createdAt}
+    Mood: ${entryData.mood}
+
+    ${@Json.Serialize(Model.Content)}`;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${entryData.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Entry exported successfully!', 'success');
+        });
+
+        // Toast notification function
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+    });
+</script>
+
+<style>
+    .mood-display {
+        text-align: center;
+    }
+
+    .mood-emoji {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .mood-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .entry-stats .stat-item {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    .entry-content {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--text-primary);
+    }
+
+    .entry-tags .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .info-item {
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .info-label {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .info-subvalue {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    #entryData {
+        display: none;
+    }
+</style>

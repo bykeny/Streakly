@@ -120,8 +120,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Journal/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm91cm5hbFxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Journal/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm91cm5hbFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Journal/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm91cm5hbFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Journal/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm91cm5hbFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Journal/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm91cm5hbFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Profile/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Shared/_HabitIcon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9IYWJpdEljb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kenan/source/repos/HabitGoalTrackerApp/HabitGoalTrackerApp/Views/Shared/_LoginPartial.cshtml]

@@ -71,7 +71,7 @@ else
                     <div class="card-body">
                         <!-- Habit Header -->
                         <div class="d-flex align-items-start justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
+                            @* <div class="d-flex align-items-center">
                                 <div class="habit-icon me-3" style="background-color: @(habit.Color ?? "#3b82f6");">
                                     @if (!string.IsNullOrEmpty(habit.IconName))
                                     {
@@ -82,6 +82,26 @@ else
                                         <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
+                                    }
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-1">@habit.Title</h5>
+                                    @if (!string.IsNullOrEmpty(habit.Description))
+                                    {
+                                        <p class="text-muted small mb-1">@habit.Description</p>
+                                    }
+                                    <small class="text-info">@habit.RepeatScheduleDisplay</small>
+                                </div>
+                            </div> *@
+                            <div class="d-flex align-items-center">
+                                <div class="habit-icon me-3" style="background-color: @habit.Color;">
+                                    @if (!string.IsNullOrEmpty(habit.IconName))
+                                    {
+                                        @await Html.PartialAsync("_HabitIcon", habit.IconName)
+                                    }
+                                    else
+                                    {
+                                        @await Html.PartialAsync("_HabitIcon", "default")
                                     }
                                 </div>
                                 <div>

@@ -4,144 +4,177 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="dashboard-header">
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h1 class="h2 mb-2">Good morning, @User.Identity!.Name!</h1>
-            <p class="mb-0 opacity-75">Let's make today count</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Welcome back!</h1>
+        <p class="text-muted mb-0">Here's your progress overview</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-controller="Habits" asp-action="Create" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Add Habit
+        </a>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-primary">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.TotalHabits</h3>
+                <p class="stats-label">Total Habits</p>
+            </div>
         </div>
-        <div class="col-md-4">
-            <div class="row g-3">
-                <div class="col-6">
-                    <div class="stat-card">
-                        <div class="stat-number">@Model.CurrentLongestStreak</div>
-                        <div class="stat-label">Day Streak</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="stat-card">
-                        <div class="stat-number">@Model.WeeklyCompletionRate</div>
-                        <div class="stat-label">This Week</div>
-                    </div>
-                </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-success">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.CompletedTodayCount</h3>
+                <p class="stats-label">Completed Today</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-warning">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.CurrentLongestStreak</h3>
+                <p class="stats-label">Current Streak</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-info">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.WeeklyCompletionRate%</h3>
+                <p class="stats-label">Weekly Rate</p>
             </div>
         </div>
     </div>
 </div>
 
 <div class="row">
+    <!-- Today's Habits -->
     <div class="col-lg-8">
-        <!-- today's Habits -->
-        <div class="card mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Today's Habits
+                </h5>
+                <a asp-controller="Habits" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="card-title mb-0">Today's Habits</h5>
-                    <span class="badge bg-primary">@Model.CompletedTodayCount/@Model.TotalHabits completed</span>
-                </div>
-
-                <div class="habit-list">
-                    <!-- sample habit items -->
-                    @* <div class="habit-card d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="habit-icon bg-primary text-white me-3">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">Drink 8 glasses of water</h6>
-                                <small class="text-muted">Daily hydration goal</small>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span class="streak-badge me-3">7 days</span>
-                            <button class="btn btn-success btn-sm">✓ Done</button>
-                        </div>
-                    </div>
-
-                    <div class="habit-card d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="habit-icon bg-warning text-white me-3">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">30 minute workout</h6>
-                                <small class="text-muted">Stay active and healthy</small>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span class="streak-badge me-3">5 days</span>
-                            <button class="btn btn-outline-primary btn-sm">Mark Done</button>
-                        </div>
-                    </div> *@
-
-                    @if (Model.TodaysHabits.Any())
-                    {
+                @if (Model.TodaysHabits.Any())
+                {
+                    <div class="habits-list">
                         @foreach (var habit in Model.TodaysHabits)
                         {
-                            <div class="habit-card d-flex align-items-center justify-content-between mb-2">
+                            <div class="habit-item @(habit.IsCompletedToday ? "completed" : "")">
                                 <div class="d-flex align-items-center">
-                                    <div class="habit-icon me-3" style="background-color: @(habit.Color ?? "#3b82f6");">
+                                    <div class="habit-icon me-3" style="background-color: @habit.Color;">
                                         @if (!string.IsNullOrEmpty(habit.IconName))
                                         {
-                                            <i class="@habit.IconName"></i>
+                                            @await Html.PartialAsync("_HabitIcon", habit.IconName)
                                         }
                                         else
                                         {
-                                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
+                                            @await Html.PartialAsync("_HabitIcon", "default")
                                         }
                                     </div>
-                                    <div>
-                                        <h6 class="mb-0">@habit.Title</h6>
-                                        <small class="text-muted">@habit.Description</small>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">@habit.Title</h6>
+                                        <small class="text-muted">@habit.RepeatScheduleDisplay</small>
                                     </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="streak-badge me-3">@habit.CurrentStreak days</span>
-                                    <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
-                                        <input type="hidden" name="id" value="@habit.Id" />
-                                        <button type="submit" class="btn btn-sm @(habit.IsCompletedToday ? "btn-success" : "btn-outline-primary")">
-                                            @(habit.IsCompletedToday ? "✓ Done" : "Mark Done")
-                                        </button>
-                                    </form>
+                                    <div class="habit-status">
+                                        @if (habit.IsCompletedToday)
+                                        {
+                                            <span class="badge bg-success">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                Completed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
+                                                <input type="hidden" name="habitId" value="@habit.Id" />
+                                                <input type="hidden" name="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                    </svg>
+                                                    Mark Done
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <div class="text-muted">No habits for today.</div>
-                    }
-                </div>
-
-                <div class="text-center mt-4">
-                    <a asp-controller="Habits" asp-action="Index" class="btn btn-outline-primary">View All Habits</a>
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-muted mb-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-muted mb-3">No habits scheduled for today</p>
+                        <a asp-controller="Habits" asp-action="Create" class="btn btn-primary btn-sm">Create Your First Habit</a>
+                    </div>
+                }
             </div>
         </div>
     </div>
 
-    @* TODO : Modify the Goals section as Habits *@
-
+    <!-- Active Goals -->
     <div class="col-lg-4">
-        <!-- active Goals -->
         <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Active Goals
+                </h5>
+                <a asp-controller="Goals" asp-action="Index" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="card-title mb-0">Active Goals</h5>
-                    <a asp-controller="Goals" asp-action="Index" class="text-decoration-none">View all</a>
-                </div>
-
-                <div class="goal-list">
-                    @if (Model.ActiveGoals.Any())
-                    {
+                @if (Model.ActiveGoals.Any())
+                {
+                    <div class="goal-list">
                         @foreach (var goal in Model.ActiveGoals)
                         {
-                            <div class="goal-card">
+                            <div class="goal-card mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h6 class="mb-0">@goal.Title</h6>
                                     <small class="text-muted">@goal.CurrentValue/@goal.TargetValue @goal.Unit</small>
@@ -152,20 +185,107 @@
                                 <small class="text-muted">@Math.Round(goal.ProgressPercentage, 1)% complete</small>
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <div class="text-center py-3">
-                            <p class="text-muted mb-2">No active goals</p>
-                            <a asp-controller="Goals" asp-action="Create" class="btn btn-primary btn-sm">Create Your First Goal</a>
-                        </div>
-                    }
-                </div>
-
-                <div class="text-center mt-4">
-                    <a asp-controller="Goals" asp-action="Create" class="btn btn-primary btn-sm">+ Add New Goal</a>
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-muted mb-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <p class="text-muted mb-2">No active goals</p>
+                        <a asp-controller="Goals" asp-action="Create" class="btn btn-primary btn-sm">Create Your First Goal</a>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .stats-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: none;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+    .stats-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 1rem;
+    }
+
+    .stats-content h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        color: var(--text-primary);
+    }
+
+    .stats-content p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+
+    .habits-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .habit-item {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+
+        .habit-item:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .habit-item:last-child {
+            border-bottom: none;
+        }
+
+        .habit-item.completed {
+            opacity: 0.7;
+            background-color: rgba(34, 197, 94, 0.05);
+        }
+
+    .habit-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .goal-card {
+        padding: 1rem;
+        background-color: var(--bg-secondary);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+    }
+
+        .goal-card:last-child {
+            margin-bottom: 0 !important;
+        }
+</style>
