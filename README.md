@@ -2,7 +2,7 @@
 
 Streakly is a modern web application built with ASP.NET Core MVC that helps users build better habits and achieve their goals through consistent tracking and meaningful insights.
 
-![Dashboard Preview]<img width="1919" height="954" alt="Screenshot_62" src="https://github.com/user-attachments/assets/316b94dd-2d6a-4045-9e42-2ababdf3305a" />
+<img width="1919" height="954" alt="Screenshot_62" src="https://github.com/user-attachments/assets/316b94dd-2d6a-4045-9e42-2ababdf3305a" />
 
 ## 🌟 Features
 
@@ -65,7 +65,9 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 ## 🚀 Getting Started
 
 1. **Clone the repository**
+
 `git clone https://github.com/bykeny/Streakly.git`
+
 `cd HabitGoalTrackerApp`
 
 3. **Update database connection string**
@@ -73,9 +75,11 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 - Update the `DefaultConnection` string to your SQL Server instance
 
 3. **Apply database migrations**
+
 `dotnet ef database update`
 
 4. **Run the application**
+
 `dotnet run`
 
 5. **Access the application**
