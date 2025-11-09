@@ -12,12 +12,14 @@ namespace HabitGoalTrackerApp.Controllers
     {
         private readonly IHabitService _habitService;
         private readonly IGoalService _goalService;
+        private readonly IInsightsService _insightsService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DashboardController(IHabitService habitService, IGoalService goalService, UserManager<ApplicationUser> userManager)
+        public DashboardController(IHabitService habitService, IGoalService goalService, IInsightsService insightsService, UserManager<ApplicationUser> userManager)
         {
             _habitService = habitService;
             _goalService = goalService;
+            _insightsService = insightsService;
             _userManager = userManager;
         }
 
@@ -29,6 +31,16 @@ namespace HabitGoalTrackerApp.Controllers
             var activeGoals = await _goalService.GetActiveGoalsSummaryAsync(userId);
 
             dashboardData.ActiveGoals = activeGoals.ToList();
+
+            // Get ML.NET-powered insights (non-blocking)
+            try
+            {
+                dashboardData.WeeklyInsights = await _insightsService.GetWeeklyInsightsAsync(userId);
+            }
+            catch
+            {
+                dashboardData.WeeklyInsights = null;
+            }
 
             return View(dashboardData);
         }

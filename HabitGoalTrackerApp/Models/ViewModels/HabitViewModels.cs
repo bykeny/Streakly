@@ -105,6 +105,7 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public double WeeklyCompletionRate { get; set; }
         public List<HabitListViewModel> TodaysHabits { get; set; } = new();
         public List<GoalSummaryViewModel> ActiveGoals { get; set; } = new();
+        public WeeklyInsightsViewModel? WeeklyInsights { get; set; }
     }
 
     public class GoalSummaryViewModel

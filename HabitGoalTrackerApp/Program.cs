@@ -32,6 +32,7 @@ builder.Services.AddScoped<IHabitService, HabitService>();
 builder.Services.AddScoped<IGoalService, GoalService>();
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<IJournalService, JournalService>();
+builder.Services.AddScoped<IInsightsService, InsightsService>();
 
 var app = builder.Build();
 
