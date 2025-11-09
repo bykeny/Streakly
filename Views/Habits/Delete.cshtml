@@ -1,0 +1,106 @@
+﻿@model HabitGoalTrackerApp.Models.Habit
+
+@{
+    ViewData["Title"] = $"Delete - {Model.Title}";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3 class="card-title mb-0">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    Delete Habit
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <strong>Warning!</strong> This action cannot be undone. All completion history for this habit will be permanently deleted.
+                </div>
+
+                <h4 class="mb-3">Are you sure you want to delete this habit?</h4>
+
+                <!-- Habit Preview -->
+                <div class="habit-preview p-3 border rounded-3 mb-4">
+                    <div class="d-flex align-items-center">
+                        <div class="habit-icon me-3" style="background-color: @(Model.Color ?? "#3b82f6");">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">@Model.Title</h6>
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                <small class="text-muted">@Model.Description</small>
+                            }
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    Created: @Model.CreatedAt.ToString("MMM dd, yyyy") •
+                                    Completions: @Model.Completions.Count •
+                                    Status: @(Model.IsActive ? "Active" : "Inactive")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Completions.Any())
+                {
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-2">What will be deleted:</h6>
+                        <ul class="list-unstyled">
+                            <li class="d-flex align-items-center mb-2">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-danger me-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                <span>@Model.Completions.Count completion records</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-2">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-danger me-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                <span>All streak history</span>
+                            </li>
+                            <li class="d-flex align-items-center">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-danger me-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                <span>Progress statistics</span>
+                            </li>
+                        </ul>
+                    </div>
+                }
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-danger">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Yes, Delete Habit
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .habit-preview {
+        background-color: var(--gray-50);
+    }
+</style>

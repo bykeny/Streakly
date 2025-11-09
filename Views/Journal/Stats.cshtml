@@ -1,0 +1,331 @@
+﻿@model HabitGoalTrackerApp.Models.ViewModels.JournalStatsViewModel
+
+@{
+    ViewData["Title"] = "Journal Statistics";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">Journal Statistics</h1>
+        <p class="text-muted mb-0">Insights into your journaling journey</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Index" class="btn btn-outline-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Journal
+        </a>
+        <a asp-action="Create" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            New Entry
+        </a>
+    </div>
+</div>
+
+<!-- Overview Stats -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-primary">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.TotalEntries</h3>
+                <p class="stats-label">Total Entries</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-success">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.CurrentStreak</h3>
+                <p class="stats-label">Current Streak</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-info">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.TotalWords</h3>
+                <p class="stats-label">Total Words</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon bg-warning">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                </svg>
+            </div>
+            <div class="stats-content">
+                <h3 class="stats-number">@Model.FavoriteEntries</h3>
+                <p class="stats-label">Favorites</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Writing Statistics -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Writing Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">This Month</span>
+                        <span class="h5 mb-0 text-primary">@Model.EntriesThisMonth entries</span>
+                    </div>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Average Words per Entry</span>
+                        <span class="h5 mb-0 text-info">@Math.Round(Model.AverageWordsPerEntry, 0)</span>
+                    </div>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Longest Streak</span>
+                        <span class="h5 mb-0 text-success">@Model.LongestStreak days</span>
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Last Entry</span>
+                        <span class="h5 mb-0 text-secondary">
+                            @if (Model.LastEntryDate.HasValue)
+                            {
+                                @Model.LastEntryDate.Value.ToString("MMM dd")
+                            }
+                            else
+                            {
+                                <text>Never</text>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mood Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Mood Distribution
+                </h5>
+            </div>
+            <div class="card-body">
+                @if (Model.MoodDistribution.Any())
+                {
+                    @foreach (var mood in Model.MoodDistribution.OrderByDescending(m => m.Key))
+                    {
+                        var percentage = Model.TotalEntries > 0 ? (double)mood.Value / Model.TotalEntries * 100 : 0;
+                        var moodInfo = GetMoodInfo(mood.Key);
+
+                        <div class="mood-stat mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="d-flex align-items-center">
+                                    <span class="mood-emoji me-2" style="color: @moodInfo.Color;">@moodInfo.Emoji</span>
+                                    <span>@mood.Key</span>
+                                </div>
+                                <span class="fw-semibold">@mood.Value (@Math.Round(percentage, 1)%)</span>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" style="width: @percentage%; background-color: @moodInfo.Color;"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <p class="text-muted">No mood data available</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Tags -->
+@if (Model.PopularTags.Any())
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                        Popular Tags
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="tag-cloud">
+                        @foreach (var tag in Model.PopularTags)
+                        {
+                            <a asp-action="Index" asp-route-tag="@tag" class="tag-item">
+                                #@tag
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@functions {
+    private (string Emoji, string Color) GetMoodInfo(HabitGoalTrackerApp.Models.JournalMood mood)
+    {
+        return mood switch
+        {
+            HabitGoalTrackerApp.Models.JournalMood.VeryHappy => ("😄", "#22c55e"),
+            HabitGoalTrackerApp.Models.JournalMood.Happy => ("😊", "#84cc16"),
+            HabitGoalTrackerApp.Models.JournalMood.Neutral => ("😐", "#6b7280"),
+            HabitGoalTrackerApp.Models.JournalMood.Sad => ("😔", "#f59e0b"),
+            HabitGoalTrackerApp.Models.JournalMood.VerySad => ("😢", "#ef4444"),
+            _ => ("😐", "#6b7280")
+        };
+    }
+}
+
+<style>
+    .stats-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: none;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+        height: 100%;
+    }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+    .stats-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .stats-content h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        color: var(--text-primary);
+    }
+
+    .stats-content p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+
+    .stat-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .mood-stat {
+        padding-bottom: 0.5rem;
+    }
+
+    .mood-emoji {
+        font-size: 1.2rem;
+    }
+
+    .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tag-item {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        text-decoration: none;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+
+        .tag-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+@*    @media (max-width: 768px) {
+        .stats-card
+
+    {
+        margin-bottom: 1rem;
+    }
+
+    .stats-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .tag-cloud {
+        justify-content: center;
+    }
+
+    } *@
+</style>

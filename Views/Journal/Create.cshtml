@@ -1,0 +1,289 @@
+﻿@model HabitGoalTrackerApp.Models.ViewModels.CreateJournalEntryViewModel
+
+@{
+    ViewData["Title"] = "New Journal Entry";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                    New Journal Entry
+                </h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" id="journalForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label fw-semibold">Entry Title *</label>
+                                <input asp-for="Title" class="form-control form-control-lg" placeholder="What's on your mind today?" />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Content" class="form-label fw-semibold">Content *</label>
+                                <textarea asp-for="Content" class="form-control" rows="15" placeholder="Start writing your thoughts..."></textarea>
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                                <div class="form-text d-flex justify-content-between">
+                                    <span>Express your thoughts, feelings, and experiences</span>
+                                    <span id="wordCount">0 words</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- Mood Selection -->
+                            <div class="mb-4">
+                                <label asp-for="Mood" class="form-label fw-semibold">How are you feeling?</label>
+                                <div class="mood-selector">
+                                    <input type="radio" asp-for="Mood" value="5" id="mood5" class="mood-radio" />
+                                    <label for="mood5" class="mood-option" data-mood="VeryHappy">
+                                        <div class="mood-emoji">😄</div>
+                                        <div class="mood-label">Very Happy</div>
+                                    </label>
+
+                                    <input type="radio" asp-for="Mood" value="4" id="mood4" class="mood-radio" />
+                                    <label for="mood4" class="mood-option" data-mood="Happy">
+                                        <div class="mood-emoji">😊</div>
+                                        <div class="mood-label">Happy</div>
+                                    </label>
+
+                                    <input type="radio" asp-for="Mood" value="3" id="mood3" class="mood-radio" checked />
+                                    <label for="mood3" class="mood-option" data-mood="Neutral">
+                                        <div class="mood-emoji">😐</div>
+                                        <div class="mood-label">Neutral</div>
+                                    </label>
+
+                                    <input type="radio" asp-for="Mood" value="2" id="mood2" class="mood-radio" />
+                                    <label for="mood2" class="mood-option" data-mood="Sad">
+                                        <div class="mood-emoji">😔</div>
+                                        <div class="mood-label">Sad</div>
+                                    </label>
+
+                                    <input type="radio" asp-for="Mood" value="1" id="mood1" class="mood-radio" />
+                                    <label for="mood1" class="mood-option" data-mood="VerySad">
+                                        <div class="mood-emoji">😢</div>
+                                        <div class="mood-label">Very Sad</div>
+                                    </label>
+                                </div>
+                                <span asp-validation-for="Mood" class="text-danger"></span>
+                            </div>
+
+                            <!-- Tags -->
+                            <div class="mb-4">
+                                <label asp-for="TagsInput" class="form-label fw-semibold">Tags</label>
+                                <input asp-for="TagsInput" class="form-control" placeholder="work, personal, reflection..." />
+                                <span asp-validation-for="TagsInput" class="text-danger"></span>
+                                <div class="form-text">Separate tags with commas</div>
+                            </div>
+
+                            <!-- Favorite -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input asp-for="IsFavorite" class="form-check-input" />
+                                    <label asp-for="IsFavorite" class="form-check-label">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                        </svg>
+                                        Mark as favorite
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Writing Tips -->
+                            <div class="writing-tips">
+                                <h6 class="fw-semibold mb-3">💡 Writing Tips</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 text-success">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Write about your day's highlights
+                                    </li>
+                                    <li class="mb-2">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 text-success">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Reflect on your emotions
+                                    </li>
+                                    <li class="mb-2">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 text-success">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Note lessons learned
+                                    </li>
+                                    <li class="mb-2">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 text-success">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Set intentions for tomorrow
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Save Entry
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="saveAsDraft">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            Save as Draft
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contentTextarea = document.getElementById('Content');
+        const wordCountElement = document.getElementById('wordCount');
+
+        // Word count functionality
+        function updateWordCount() {
+            const text = contentTextarea.value.trim();
+            const wordCount = text === '' ? 0 : text.split(/\s+/).length;
+            wordCountElement.textContent = `${wordCount} words`;
+        }
+
+        contentTextarea.addEventListener('input', updateWordCount);
+        updateWordCount(); // Initial count
+
+        // Auto-save functionality (localStorage)
+        function autoSave() {
+            const formData = {
+                title: document.getElementById('Title').value,
+                content: contentTextarea.value,
+                mood: document.querySelector('input[name="Mood"]:checked')?.value,
+                tags: document.getElementById('TagsInput').value,
+                favorite: document.getElementById('IsFavorite').checked,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('journal_draft', JSON.stringify(formData));
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(autoSave, 30000);
+
+        // Save on input changes
+        document.querySelectorAll('#journalForm input, #journalForm textarea').forEach(element => {
+            element.addEventListener('input', autoSave);
+        });
+
+        // Load draft on page load
+        function loadDraft() {
+            const draft = localStorage.getItem('journal_draft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                const now = new Date();
+                const draftTime = new Date(data.timestamp);
+                const hoursDiff = (now - draftTime) / (1000 * 60 * 60);
+
+                // Only load if draft is less than 24 hours old
+                if (hoursDiff < 24) {
+                    if (confirm('Found a recent draft. Would you like to restore it?')) {
+                        document.getElementById('Title').value = data.title || '';
+                        contentTextarea.value = data.content || '';
+                        document.getElementById('TagsInput').value = data.tags || '';
+                        document.getElementById('IsFavorite').checked = data.favorite || false;
+
+                        if (data.mood) {
+                            const moodRadio = document.querySelector(`input[name="Mood"][value="${data.mood}"]`);
+                            if (moodRadio) moodRadio.checked = true;
+                        }
+
+                        updateWordCount();
+                    }
+                }
+            }
+        }
+
+        loadDraft();
+
+        // Clear draft on successful submit
+        document.getElementById('journalForm').addEventListener('submit', function() {
+            localStorage.removeItem('journal_draft');
+        });
+
+        // Save as draft button
+        document.getElementById('saveAsDraft').addEventListener('click', function() {
+            autoSave();
+            alert('Draft saved successfully!');
+        });
+    });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    .mood-selector {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .mood-radio {
+        display: none;
+    }
+
+    .mood-option {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        border: 2px solid var(--border-color);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .mood-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+    .mood-radio:checked + .mood-option {
+        border-color: var(--primary-color);
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .mood-emoji {
+        font-size: 1.5rem;
+        margin-right: 0.75rem;
+    }
+
+    .mood-label {
+        font-weight: 500;
+    }
+
+    .writing-tips {
+        background-color: var(--bg-secondary);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+    }
+
+        .writing-tips ul li {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+</style>

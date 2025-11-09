@@ -1,0 +1,461 @@
+﻿@model HabitGoalTrackerApp.Models.ViewModels.HabitDetailsViewModel
+
+@{
+    ViewData["Title"] = $"Details - {Model.Title}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 mb-1">@Model.Title</h1>
+        <p class="text-muted mb-0">Habit details and progress</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Habits
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Habit Overview Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+                @* <div class="d-flex align-items-center mb-4">
+                    <div class="habit-icon me-4" style="background-color: @(Model.Color ?? "#3b82f6"); width: 64px; height: 64px;">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-2">@Model.Title</h3>
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="text-muted mb-3">@Model.Description</p>
+                        }
+                        <div class="d-flex align-items-center gap-3">
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inactive</span>
+                            }
+                            <small class="text-muted">Created @Model.CreatedAt.ToString("MMM dd, yyyy")</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        @if (Model.IsActive)
+                        {
+                            <button class="btn @(Model.IsCompletedToday ? "btn-success" : "btn-outline-primary") btn-lg toggle-completion"
+                                    data-habit-id="@Model.Id"
+                                    data-completed="@Model.IsCompletedToday.ToString().ToLower()">
+                                @if (Model.IsCompletedToday)
+                                {
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Completed Today</span>
+                                }
+                                else
+                                {
+                                    <span>Mark Complete</span>
+                                }
+                            </button>
+                        }
+                    </div>
+                </div> *@
+                <div class="d-flex align-items-center mb-4">
+                    <div class="habit-icon-large me-4" style="background-color: @Model.Color;">
+                        @if (!string.IsNullOrEmpty(Model.IconName))
+                        {
+                            @await Html.PartialAsync("_HabitIcon", Model.IconName)
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync("_HabitIcon", "default")
+                        }
+                    </div>
+                    <div>
+                        <h1 class="h2 mb-1">@Model.Title</h1>
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="text-muted mb-2">@Model.Description</p>
+                        }
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-primary">@Model.RepeatScheduleDisplay</span>
+                            <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary")">
+                                @(Model.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Calendar -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z"></path>
+                    </svg>
+                    Last 30 Days
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="calendar-grid">
+                    @{
+                        var weeks = new List<List<HabitGoalTrackerApp.Models.ViewModels.HabitCompletionDay>>();
+                        var currentWeek = new List<HabitGoalTrackerApp.Models.ViewModels.HabitCompletionDay>();
+
+                        foreach (var day in Model.CompletionHistory)
+                        {
+                            currentWeek.Add(day);
+                            if (currentWeek.Count == 7)
+                            {
+                                weeks.Add(currentWeek);
+                                currentWeek = new List<HabitGoalTrackerApp.Models.ViewModels.HabitCompletionDay>();
+                            }
+                        }
+                        if (currentWeek.Any())
+                        {
+                            weeks.Add(currentWeek);
+                        }
+                    }
+
+                    <!-- Day headers -->
+                    <div class="calendar-header d-flex mb-2">
+                        <div class="calendar-day-header">S</div>
+                        <div class="calendar-day-header">M</div>
+                        <div class="calendar-day-header">T</div>
+                        <div class="calendar-day-header">W</div>
+                        <div class="calendar-day-header">T</div>
+                        <div class="calendar-day-header">F</div>
+                        <div class="calendar-day-header">S</div>
+                    </div>
+
+                    <!-- Calendar weeks -->
+                    @foreach (var week in weeks)
+                    {
+                        <div class="calendar-week d-flex mb-1">
+                            @foreach (var day in week)
+                            {
+                                <div class="calendar-day @(day.IsCompleted ? "completed" : "") @(day.Date.Date == DateTime.Today ? "today" : "")"
+                                     title="@day.Date.ToString("MMM dd, yyyy") - @(day.IsCompleted ? "Completed" : "Not completed")">
+                                    <span class="day-number">@day.Date.Day</span>
+                                </div>
+                            }
+                            @for (int i = week.Count; i < 7; i++)
+                            {
+                                <div class="calendar-day empty"></div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="legend-dot completed me-2"></div>
+                            <span class="small text-muted">Completed</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="legend-dot me-2"></div>
+                            <span class="small text-muted">Not completed</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="legend-dot today me-2"></div>
+                            <span class="small text-muted">Today</span>
+                        </div>
+                    </div>
+                    <div class="text-muted small">
+                        @Model.CompletionHistory.Count(h => h.IsCompleted) of @Model.CompletionHistory.Count days completed
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Statistics Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Current Streak</span>
+                        <span class="h4 mb-0 text-warning">@Model.CurrentStreak</span>
+                    </div>
+                    <small class="text-muted">days in a row</small>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Longest Streak</span>
+                        <span class="h4 mb-0 text-success">@Model.LongestStreak</span>
+                    </div>
+                    <small class="text-muted">personal best</small>
+                </div>
+
+                <div class="stat-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Total Completions</span>
+                        <span class="h4 mb-0 text-primary">@Model.TotalCompletions</span>
+                    </div>
+                    <small class="text-muted">all time</small>
+                </div>
+
+                <div class="stat-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Success Rate (30 days)</span>
+                        <span class="h4 mb-0 text-info">@Math.Round((double)Model.CompletionHistory.Count(h => h.IsCompleted) / Model.CompletionHistory.Count * 100, 1)%</span>
+                    </div>
+                    <small class="text-muted">completion percentage</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Edit Habit
+                    </a>
+
+                    @if (Model.IsActive)
+                    {
+                        <button class="btn btn-outline-warning" onclick="toggleHabitStatus(@Model.Id, false)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Pause Habit
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-success" onclick="toggleHabitStatus(@Model.Id, true)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Resume Habit
+                        </button>
+                    }
+
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete Habit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Toggle completion functionality
+        document.querySelectorAll('.toggle-completion').forEach(button => {
+            button.addEventListener('click', function() {
+                const habitId = this.dataset.habitId;
+                const isCompleted = this.dataset.completed === 'true';
+
+                this.disabled = true;
+
+                fetch(`/Habits/ToggleCompletion/${habitId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Reload to update calendar and stats
+                    } else {
+                        showToast('Failed to update habit. Please try again.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('An error occurred. Please try again.', 'error');
+                })
+                .finally(() => {
+                    this.disabled = false;
+                });
+            });
+        });
+
+        // Toggle habit status (pause/resume)
+        function toggleHabitStatus(habitId, isActive) {
+            const actionText = isActive ? 'resume' : 'pause';
+
+            if (!confirm(`Are you sure you want to ${actionText} this habit?`)) {
+                return;
+            }
+
+            fetch(`/Habits/ToggleStatus/${habitId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify({ isActive: isActive })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    // Reload page to reflect changes
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Failed to update habit status.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred. Please try again.', 'error');
+            });
+        }
+
+        // Toast notification function
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+    </script>
+}
+
+<style>
+    .calendar-grid {
+        max-width: 350px;
+    }
+
+    .calendar-day-header {
+        width: 40px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray-500);
+        margin-right: 2px;
+    }
+
+    .calendar-day {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 2px;
+        border-radius: 6px;
+        background-color: var(--gray-100);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+        .calendar-day.completed {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary-color);
+        }
+
+            .calendar-day.today.completed {
+                border-color: var(--success-color);
+                box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+            }
+
+        .calendar-day.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+
+    .day-number {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        background-color: var(--gray-200);
+    }
+
+        .legend-dot.completed {
+            background-color: var(--success-color);
+        }
+
+        .legend-dot.today {
+            background-color: var(--primary-color);
+        }
+
+    .stat-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+        .stat-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .habit-icon-large {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+        .habit-icon-large svg {
+            width: 30px;
+            height: 30px;
+        }
+</style>
