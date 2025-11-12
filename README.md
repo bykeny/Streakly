@@ -1,6 +1,6 @@
 # Streakly - Habit & Goal Tracker
 
-Streakly is a modern web application built with ASP.NET Core MVC that helps users build better habits and achieve their goals through consistent tracking and meaningful insights.
+Streakly is a modern web application built with ASP.NET Core MVC that helps users build better habits and achieve their goals through consistent tracking, meaningful insights, and AI-powered analytics.
 
 <img width="1919" height="954" alt="Screenshot_62" src="https://github.com/user-attachments/assets/316b94dd-2d6a-4045-9e42-2ababdf3305a" />
 
@@ -25,6 +25,8 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 - Completion rates and streak tracking
 - Weekly and monthly progress views
 - Visual progress indicators and statistics
+- **AI-Powered Insights**: ML.NET-powered weekly insights analyzing habit patterns, goal progress, and mood correlations
+- Personalized recommendations and encouragement messages
 
 ### Journal
 - Daily reflection entries with mood tracking
@@ -44,6 +46,7 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
   - ASP.NET Core MVC (.NET 9)
   - Entity Framework Core
   - ASP.NET Core Identity
+  - ML.NET (for AI-powered insights)
   - C# 13.0
 
 - **Frontend**
@@ -97,12 +100,15 @@ The application supports various configuration options through `appsettings.json
 
 ## 🎯 Future Roadmap
 
+- [x] AI-powered insights with ML.NET
 - [ ] Mobile app integration
 - [ ] Social features and habit sharing
 - [ ] Advanced analytics and reporting
 - [ ] API endpoints for third-party integration
 - [ ] Email notifications and reminders
 - [ ] Data export/import functionality
+- [ ] Gamification and achievement system
+- [ ] Push notifications and reminders
 
 ## 🤝 Contributing
 
@@ -114,6 +120,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+
 ## 📧 Contact
 
 Kanan Ramazanov - kenanramaznov@gmail.com
+
+---
+
+**Built with ❤️ using ASP.NET Core and ML.NET**
