@@ -76,8 +76,13 @@ bld/
 # Visual Studio cache/options directory
 .vs/
 # Visual Studio code coverage results
+coverage/
+*.lcov
 *.coverage
 *.coveragexml
+
+# Azure Functions local settings
+local.settings.json
 
 # NuGet Packages
 *.nupkg
