@@ -124,19 +124,45 @@ body {
 }
 
 /* Navigation */
+.navbar {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
 .navbar-brand {
     font-size: 1.5rem;
+    font-weight: 700;
 }
 
 .nav-link {
     font-weight: 500;
     color: var(--gray-600) !important;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0.5rem;
+    margin: 0 0.25rem;
 }
 
     .nav-link:hover {
         color: var(--primary-color) !important;
+        background-color: rgba(59, 130, 246, 0.1) !important;
+        transform: translateY(-1px);
     }
+
+    .nav-link.active {
+        color: var(--primary-color) !important;
+        background-color: rgba(59, 130, 246, 0.15) !important;
+        font-weight: 600;
+    }
+
+.navbar-nav .nav-item .nav-link svg {
+    transition: transform 0.2s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover svg {
+    transform: scale(1.1);
+}
 
 /* Authentication Pages */
 .auth-container {
@@ -295,14 +321,34 @@ body {
 }
 
 .footer {
+    background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%) !important;
     border-top: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
     font-size: 1rem;
+    padding: 2rem 0;
 }
 
     .footer a:hover {
         color: #fff !important;
         text-decoration: underline;
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+
+    .footer .text-white-50 {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .footer .text-white {
+        color: #ffffff !important;
+    }
+
+    .footer i {
+        transition: transform 0.2s ease;
+    }
+
+    .footer a:hover i {
+        transform: scale(1.1);
     }
 
 
