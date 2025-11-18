@@ -83,7 +83,7 @@
                     </div>
                     <div class="progress mb-3" style="height: 12px;">
                         <div class="progress-bar @(Model.IsCompleted ? "bg-success" : Model.IsOverdue ? "bg-danger" : "bg-primary")"
-                             style="width: @Model.ProgressPercentage%"></div>
+                             style="width: @(Model.ProgressPercentage.ToString("F0"))%"></div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="text-muted">@Math.Round(Model.ProgressPercentage, 1)% complete</span>

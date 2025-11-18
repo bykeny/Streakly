@@ -126,7 +126,7 @@
                                         else
                                         {
                                             <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
-                                                <input type="hidden" name="habitId" value="@habit.Id" />
+                                                <input type="hidden" name="id" value="@habit.Id" />
                                                 <input type="hidden" name="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
                                                 <button type="submit" class="btn btn-sm btn-outline-primary">
                                                     <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
@@ -180,7 +180,7 @@
                                     <small class="text-muted">@goal.CurrentValue/@goal.TargetValue @goal.Unit</small>
                                 </div>
                                 <div class="progress mb-2" style="height: 8px;">
-                                    <div class="progress-bar bg-primary" style="width: @goal.ProgressPercentage%"></div>
+                                    <div class="progress-bar bg-primary" style="width: @(goal.ProgressPercentage.ToString("F0"))%"></div>
                                 </div>
                                 <small class="text-muted">@Math.Round(goal.ProgressPercentage, 1)% complete</small>
                             </div>
@@ -382,3 +382,74 @@
         font-style: italic;
     }
 </style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.habit-item form').on('submit', function(e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var habitItem = form.closest('.habit-item');
+                var button = form.find('button');
+                var originalText = button.html();
+
+                // Disable button and show loading
+                button.prop('disabled', true);
+                button.html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Loading...');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Update the UI based on completion status
+                            if (response.completed) {
+                                // Mark as completed
+                                habitItem.addClass('completed');
+                                habitItem.find('.habit-status').html(`
+                                    <span class="badge bg-success">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        Completed
+                                    </span>
+                                `);
+                            } else {
+                                // Mark as not completed
+                                habitItem.removeClass('completed');
+                                habitItem.find('.habit-status').html(`
+                                    <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="${form.find('input[name=id]').val()}" />
+                                        <input type="hidden" name="date" value="${form.find('input[name=date]').val()}" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            Mark Done
+                                        </button>
+                                    </form>
+                                `);
+                            }
+
+                            // Update stats cards (you might need to reload the page or update via AJAX)
+                            // For now, we'll just show a success message
+                            toastr.success('Habit updated successfully!');
+                        } else {
+                            toastr.error('Failed to update habit. Please try again.');
+                        }
+                    },
+                    error: function() {
+                        toastr.error('An error occurred. Please try again.');
+                    },
+                    complete: function() {
+                        // Re-enable button and restore original text
+                        button.prop('disabled', false);
+                        button.html(originalText);
+                    }
+                });
+            });
+        });
+    </script>
+}

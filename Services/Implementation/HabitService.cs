@@ -141,7 +141,7 @@ namespace HabitGoalTrackerApp.Services.Implementation
                 WeeklyCompletionRate = Math.Round(weeklyRate, 1),
                 TodaysHabits = habitsList.Where(h => h.IsScheduledToday).Take(5).ToList(),
                 //ActiveGoals = activeGoals.ToList()
-                ActiveGoals = new List<GoalSummaryViewModel>()
+                ActiveGoals = activeGoals.ToList()
             };
         }
 
