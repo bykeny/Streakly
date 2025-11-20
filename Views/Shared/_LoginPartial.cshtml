@@ -25,11 +25,29 @@
                 Hello, @user?.FullName!
             </a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index" title="Manage">Profile</a></li>
+                <li>
+                    <a class="dropdown-item profile-item d-flex flex-column align-items-start" asp-controller="Profile" asp-action="Index" title="Manage">
+                        <div class="d-flex align-items-center w-100">
+                            <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            <span class="fw-medium">Profile</span>
+                        </div>
+                        <small class="text-muted description-text">Manage your account settings</small>
+                    </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" class="dropdown-item">Logout</button>
+                        <button type="submit" class="dropdown-item logout-item d-flex flex-column align-items-start w-100 text-start border-0 bg-transparent">
+                            <div class="d-flex align-items-center w-100">
+                                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                <span class="fw-medium">Logout</span>
+                            </div>
+                            <small class="text-muted description-text">Sign out of your account</small>
+                        </button>
                     </form>
                 </li>
             </ul>
