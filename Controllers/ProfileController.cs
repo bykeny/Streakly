@@ -2,9 +2,14 @@
 using HabitGoalTrackerApp.Models;
 using HabitGoalTrackerApp.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HabitGoalTrackerApp.Controllers
 {
@@ -14,15 +19,18 @@ namespace HabitGoalTrackerApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
         public ProfileController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _environment = environment;
         }
 
         // GET: Profile
@@ -60,6 +68,7 @@ namespace HabitGoalTrackerApp.Controllers
                 EmailNotifications = user.EmailNotifications,
                 DailyReminders = user.DailyReminders,
                 WeeklyReports = user.WeeklyReports,
+                ProfileImagePath = user.ProfileImagePath,
                 CreatedAt = user.CreatedAt,
                 LastLoginAt = user.LastLoginAt,
                 TotalHabits = totalHabits,
@@ -92,7 +101,8 @@ namespace HabitGoalTrackerApp.Controllers
                 DateFormat = user.DateFormat,
                 EmailNotifications = user.EmailNotifications,
                 DailyReminders = user.DailyReminders,
-                WeeklyReports = user.WeeklyReports
+                WeeklyReports = user.WeeklyReports,
+                ProfileImagePath = user.ProfileImagePath
             };
 
             return View(viewModel);
@@ -112,6 +122,43 @@ namespace HabitGoalTrackerApp.Controllers
             if (user == null)
             {
                 return NotFound();
+            }
+
+            // Handle profile image upload
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                // Validate file type
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(model.ProfileImageFile.FileName).ToLower();
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("ProfileImageFile", "Only JPEG and PNG files are allowed.");
+                    return View(model);
+                }
+
+                // Validate file size (max 2MB)
+                if (model.ProfileImageFile.Length > 2 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("ProfileImageFile", "File size must be less than 2MB.");
+                    return View(model);
+                }
+
+                // Create directory if it doesn't exist
+                var profilesPath = Path.Combine(_environment.WebRootPath, "images", "profiles");
+                Directory.CreateDirectory(profilesPath);
+
+                // Generate unique filename
+                var fileName = $"{user.Id}.jpg";
+                var filePath = Path.Combine(profilesPath, fileName);
+
+                // Save the file
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.ProfileImageFile.CopyToAsync(stream);
+                }
+
+                // Update user profile image path
+                user.ProfileImagePath = $"/images/profiles/{fileName}";
             }
 
             user.FirstName = model.FirstName;

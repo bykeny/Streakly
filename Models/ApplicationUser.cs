@@ -12,6 +12,7 @@ namespace HabitGoalTrackerApp.Models
         public bool EmailNotifications { get; set; } = true;
         public bool DailyReminders { get; set; } = true;
         public bool WeeklyReports { get; set; } = true;
+        public string? ProfileImagePath { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime LastLoginAt { get; set; } = DateTime.UtcNow;
 

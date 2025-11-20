@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace HabitGoalTrackerApp.Models.ViewModels
 {
@@ -44,6 +45,12 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         [Display(Name = "Weekly Reports")]
         public bool WeeklyReports { get; set; } = true;
 
+        [Display(Name = "Profile Image")]
+        public string? ProfileImagePath { get; set; }
+
+        [Display(Name = "Upload New Profile Image")]
+        public IFormFile? ProfileImageFile { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public DateTime LastLoginAt { get; set; }
 
@@ -52,6 +59,8 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         public int TotalGoals { get; set; }
         public int CompletedGoals { get; set; }
         public int CurrentStreak { get; set; }
+
+        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 
     public class ChangePasswordViewModel
