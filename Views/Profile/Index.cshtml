@@ -95,92 +95,97 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted">Last Login</label>
-                        <p class="mb-0 fw-medium">@Model.LastLoginAt.ToString("MMMM dd, yyyy")</p>
+                        <p class="mb-0 fw-medium">@(Model.LastLoginAt?.ToString("MMMM dd, yyyy") ?? "Never")</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Preferences -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Preferences</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">Time Zone</label>
-                        <p class="mb-0 fw-medium">@(Model.TimeZone ?? "Not set")</p>
+        <!-- Preferences and Statistics -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <!-- Preferences -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Preferences</h5>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">Date Format</label>
-                        <p class="mb-0 fw-medium">@Model.DateFormat</p>
-                    </div>
-                </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted">Time Zone</label>
+                                <p class="mb-0 fw-medium">@(Model.TimeZone ?? "Not set")</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted">Date Format</label>
+                                <p class="mb-0 fw-medium">@Model.DateFormat</p>
+                            </div>
+                        </div>
 
-                <h6 class="fw-semibold mb-3">Notifications</h6>
-                <div class="row">
-                    <div class="col-md-4 mb-2">
-                        <div class="d-flex align-items-center">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 @(Model.EmailNotifications ? "text-success" : "text-muted")">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(Model.EmailNotifications ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12")"></path>
-                            </svg>
-                            <span class="@(Model.EmailNotifications ? "text-success" : "text-muted")">Email Notifications</span>
+                        <h6 class="fw-semibold mb-3">Notifications</h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 @(Model.EmailNotifications ? "text-success" : "text-muted")">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(Model.EmailNotifications ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12")"></path>
+                                    </svg>
+                                    <span class="@(Model.EmailNotifications ? "text-success" : "text-muted")">Email Notifications</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 @(Model.DailyReminders ? "text-success" : "text-muted")">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(Model.DailyReminders ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12")"></path>
+                                    </svg>
+                                    <span class="@(Model.DailyReminders ? "text-success" : "text-muted")">Daily Reminders</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 @(Model.WeeklyReports ? "text-success" : "text-muted")">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(Model.WeeklyReports ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12")"></path>
+                                    </svg>
+                                    <span class="@(Model.WeeklyReports ? "text-success" : "text-muted")">Weekly Reports</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-2">
-                        <div class="d-flex align-items-center">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 @(Model.DailyReminders ? "text-success" : "text-muted")">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(Model.DailyReminders ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12")"></path>
-                            </svg>
-                            <span class="@(Model.DailyReminders ? "text-success" : "text-muted")">Daily Reminders</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <div class="d-flex align-items-center">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2 @(Model.WeeklyReports ? "text-success" : "text-muted")">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(Model.WeeklyReports ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12")"></path>
-                            </svg>
-                            <span class="@(Model.WeeklyReports ? "text-success" : "text-muted")">Weekly Reports</span>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Statistics -->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Your Statistics</h5>
-            </div>
-            <div class="card-body">
-                <div class="stat-item mb-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Total Habits</span>
-                        <span class="h4 mb-0 text-primary">@Model.TotalHabits</span>
+            <div class="col-lg-6 mb-4">
+                <!-- Statistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Your Statistics</h5>
                     </div>
-                </div>
+                    <div class="card-body">
+                        <div class="stat-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Total Habits</span>
+                                <span class="h4 mb-0 text-primary">@Model.TotalHabits</span>
+                            </div>
+                        </div>
 
-                <div class="stat-item mb-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Total Goals</span>
-                        <span class="h4 mb-0 text-info">@Model.TotalGoals</span>
-                    </div>
-                </div>
+                        <div class="stat-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Total Goals</span>
+                                <span class="h4 mb-0 text-info">@Model.TotalGoals</span>
+                            </div>
+                        </div>
 
-                <div class="stat-item mb-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Completed Goals</span>
-                        <span class="h4 mb-0 text-success">@Model.CompletedGoals</span>
-                    </div>
-                </div>
+                        <div class="stat-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Completed Goals</span>
+                                <span class="h4 mb-0 text-success">@Model.CompletedGoals</span>
+                            </div>
+                        </div>
 
-                <div class="stat-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Current Streak</span>
-                        <span class="h4 mb-0 text-warning">@Model.CurrentStreak</span>
+                        <div class="stat-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted">Current Streak</span>
+                                <span class="h4 mb-0 text-warning">@Model.CurrentStreak</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

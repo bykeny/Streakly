@@ -22,7 +22,7 @@
                         </svg>
                     }
                 </div>
-                Hello @User.Identity?.Name!
+                Hello, @user?.FullName!
             </a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index" title="Manage">Profile</a></li>

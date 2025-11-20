@@ -52,6 +52,19 @@
                         <input type="file" class="form-control" id="ProfileImageFile" name="ProfileImageFile" accept=".jpg,.jpeg,.png">
                         <div class="form-text">Supported formats: JPEG, PNG. Max size: 2MB</div>
                     </div>
+                    @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+                    {
+                        <div class="mb-3">
+                            <input asp-for="DeleteProfileImage" type="hidden" value="false" />
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="document.getElementById('DeleteProfileImage').value='true'; this.form.submit();">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                Delete Image
+                            </button>
+                            <div class="form-text text-muted">Click to remove your current profile image</div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

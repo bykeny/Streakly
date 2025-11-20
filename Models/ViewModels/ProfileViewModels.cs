@@ -51,8 +51,11 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         [Display(Name = "Upload New Profile Image")]
         public IFormFile? ProfileImageFile { get; set; }
 
+        [Display(Name = "Delete Current Profile Image")]
+        public bool DeleteProfileImage { get; set; }
+
         public DateTime CreatedAt { get; set; }
-        public DateTime LastLoginAt { get; set; }
+        public DateTime? LastLoginAt { get; set; }
 
         // Statistics
         public int TotalHabits { get; set; }

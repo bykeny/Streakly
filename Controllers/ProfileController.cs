@@ -124,8 +124,24 @@ namespace HabitGoalTrackerApp.Controllers
                 return NotFound();
             }
 
-            // Handle profile image upload
-            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            // Handle profile image deletion
+            if (model.DeleteProfileImage && !string.IsNullOrEmpty(user.ProfileImagePath))
+            {
+                // Delete the physical file
+                var profilesPath = Path.Combine(_environment.WebRootPath, "images", "profiles");
+                var fileName = Path.GetFileName(user.ProfileImagePath);
+                var filePath = Path.Combine(profilesPath, fileName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                // Clear the profile image path
+                user.ProfileImagePath = null;
+            }
+            // Handle profile image upload (only if not deleting)
+            else if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
                 // Validate file type
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };

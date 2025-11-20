@@ -14,7 +14,7 @@ namespace HabitGoalTrackerApp.Models
         public bool WeeklyReports { get; set; } = true;
         public string? ProfileImagePath { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime LastLoginAt { get; set; } = DateTime.UtcNow;
+        public DateTime? LastLoginAt { get; set; }
 
         // Navigation properties
         public virtual ICollection<Habit> Habits { get; set; } = new List<Habit>();
