@@ -135,6 +135,45 @@ body {
     font-weight: 700;
 }
 
+/* Mobile navbar adjustments */
+/* Reduced font sizes and padding for better fit on small screens */
+/* Hide navigation text on xs screens to show only icons, improving usability */
+@media (max-width: 575.98px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.875rem;
+    }
+
+    .navbar-nav .nav-item .nav-link svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Hide nav-link text on very small screens in the main navbar, show only icons */
+    /* But keep text visible in the collapsed hamburger menu */
+    .nav-link-text {
+        display: none;
+    }
+
+    .navbar-collapse .nav-link-text {
+        display: inline;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        justify-content: center;
+        min-width: 44px; /* Touch target */
+    }
+
+    .profile-placeholder {
+        width: 120px !important;
+        height: 120px !important;
+    }
+}
+
 .nav-link {
     font-weight: 500;
     color: var(--gray-600) !important;
@@ -325,8 +364,8 @@ body {
 }
 
 .auth-icon {
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     border-radius: 1.5rem;
     display: flex;
@@ -390,8 +429,8 @@ body {
     }
 
 .habit-icon {
-    width: 48px;
-    height: 48px;
+    width: 3rem;
+    height: 3rem;
     border-radius: 0.75rem;
     display: flex;
     align-items: center;
@@ -488,18 +527,60 @@ body {
     }
 
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Responsive Design - Mobile First */
+/* Changed from desktop-first to mobile-first approach for better responsive design */
+/* Replaced fixed pixel dimensions with responsive rem units */
+/* Added progressive enhancement for larger screens */
+@media (min-width: 576px) {
+    /* Small devices (tablets, 576px and up) */
+    .habit-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .auth-icon {
+        width: 6rem;
+        height: 6rem;
+    }
+}
+
+@media (min-width: 768px) {
+    /* Medium devices (desktops, 768px and up) */
+    .habit-icon {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .auth-icon {
+        width: 7rem;
+        height: 7rem;
+    }
+
     .auth-card {
-        padding: 2rem;
-        margin: 1rem;
+        padding: 3rem;
     }
 
     .dashboard-header {
-        padding: 1.5rem;
+        padding: 2rem;
     }
 
     .stat-card {
-        padding: 1rem;
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    /* Large devices (large desktops, 992px and up) */
+    .habit-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Extra large devices (1200px and up) */
+    .habit-icon {
+        width: 5rem;
+        height: 5rem;
     }
 }
