@@ -45,7 +45,7 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 - **Backend**
   - ASP.NET Core MVC (.NET 9)
   - Entity Framework Core
-  - ASP.NET Core Identity
+  - ASP.NET Core Identity (Custom MVC Authentication)
   - ML.NET (for AI-powered insights)
   - C# 13.0
 
@@ -58,6 +58,16 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 - **Database**
   - SQL Server
   - Entity Framework Core Migrations
+
+## 🔐 Authentication
+
+The application uses a custom MVC-based authentication system built on ASP.NET Core Identity:
+
+- **Custom AuthController** replaces default Identity Razor Pages
+- Routes: `/Auth/Login`, `/Auth/Register`, `/Auth/Logout`, `/Auth/ForgotPassword`
+- Features: password reset, account lockout, remember me, secure cookies
+- Email service integration ready (currently logs to console in development)
+- For production: configure email service in `Services/Implementation/EmailSender.cs`
 
 ## 📋 Prerequisites
 
@@ -86,7 +96,7 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 `dotnet run`
 
 5. **Access the application**
-- Open your browser to `https://localhost:7083`
+- Open your browser to `https://localhost:5032`
 - Register a new account to get started
 
 ## 🔧 Configuration

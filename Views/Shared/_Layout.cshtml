@@ -74,13 +74,6 @@
                         </ul>
                     }
                     <partial name="_LoginPartial" />
-                    @* <div class="d-flex align-items-center me-3">
-                        <button id="themeToggle" class="btn btn-outline-secondary btn-sm" title="Toggle theme">
-                            <svg id="themeIcon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                        </button>
-                    </div> *@
                 </div>
             </div>
         </nav>
@@ -90,26 +83,6 @@
             @RenderBody()
         </main>
     </div>
-
-    @* <footer class="footer mt-auto py-4 bg-dark text-white-50"> *@
-    @*     <div class="container"> *@
-    @*         <div class="row align-items-center"> *@
-    @*             <div class="col-md-6 text-center text-md-start mb-2 mb-md-0"> *@
-    @*                 <span class="fw-semibold text-white">Streakly</span> &copy; @DateTime.Now.Year &mdash; Build better habits, achieve your goals. *@
-    @*             </div> *@
-    @*             <div class="col-md-6 text-center text-md-end"> *@
-    @*                 <a href="https://github.com/your-repo" class="text-white-50 me-3" target="_blank" rel="noopener" title="GitHub"> *@
-    @*                     <i class="fab fa-github fa-lg"></i> *@
-    @*                 </a> *@
-    @*                 <a href="mailto:support@streakly.com" class="text-white-50 me-3" title="Contact Support"> *@
-    @*                     <i class="fa fa-envelope fa-lg"></i> *@
-    @*                 </a> *@
-    @*                 <a href="/privacy" class="text-white-50 me-3" title="Privacy Policy">Privacy</a> *@
-    @*                 <a href="/terms" class="text-white-50" title="Terms of Service">Terms</a> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*     </div> *@
-    @* </footer> *@
 
     <footer class="footer mt-auto py-4 bg-dark text-white-50">
         <div class="container">
@@ -121,7 +94,7 @@
                     <a href="https://github.com/bykeny/Streakly" class="text-white-50 me-3" target="_blank" rel="noopener" title="GitHub">
                         <i class="fab fa-github fa-lg"></i>
                     </a>
-                    <a href="mailto:support@streakly.com" class="text-white-50 me-3" title="Contact Support">
+                    <a href="mailto:kenanramaznov@gmail.com" class="text-white-50 me-3" title="Contact Support">
                         <i class="fa fa-envelope fa-lg"></i>
                     </a>
                     <a href="/privacy" class="text-white-50 me-3" title="Privacy Policy">Privacy</a>
@@ -140,44 +113,6 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        // Theme toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const body = document.body;
-
-            // Check for saved theme preference or default to light
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            setTheme(savedTheme);
-
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = body.getAttribute('data-theme') || 'light';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                setTheme(newTheme);
-            });
-
-            function setTheme(theme) {
-                body.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                updateThemeIcon(theme);
-            }
-
-            function updateThemeIcon(theme) {
-                if (theme === 'dark') {
-                    // Moon icon for dark theme
-                    themeIcon.innerHTML = `
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                    `;
-                    themeToggle.title = 'Switch to light theme';
-                } else {
-                    // Sun icon for light theme
-                    themeIcon.innerHTML = `
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    `;
-                    themeToggle.title = 'Switch to dark theme';
-                }
-            }
-        });
     </script>
 </body>
 </html>
