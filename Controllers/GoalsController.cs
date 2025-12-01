@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using HabitGoalTrackerApp.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using HabitGoalTrackerApp.Models.ViewModels;
-using NuGet.Protocol;
 
 namespace HabitGoalTrackerApp.Controllers
 {
@@ -132,7 +131,7 @@ namespace HabitGoalTrackerApp.Controllers
                     TempData["SuccessMessage"] = "Goal created successfully!";
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Log the exception
                     ModelState.AddModelError("", "An error occurred while creating the goal. Please try again.");

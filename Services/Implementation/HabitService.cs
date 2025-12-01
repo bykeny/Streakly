@@ -13,7 +13,6 @@ namespace HabitGoalTrackerApp.Services.Implementation
         public HabitService(ApplicationDbContext dbContext, IGoalService goalService)
         {
             _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            //this.goalService = goalService ?? throw new ArgumentNullException(nameof(goalService));
             _goalService = goalService;
         }
         public async Task<Habit> CreateHabitAsync(CreateHabitViewModel model, string userId)
