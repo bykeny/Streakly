@@ -112,7 +112,7 @@ namespace HabitGoalTrackerApp.Controllers
         }
 
         // POST: journal/edit/5
-        [Route("journal/edit")]
+        [Route("journal/edit/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditJournalEntryViewModel model)
@@ -156,7 +156,7 @@ namespace HabitGoalTrackerApp.Controllers
         }
 
         // POST: journal/delete/5
-        [Route("journal/delete")]
+        [Route("journal/delete/{id}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

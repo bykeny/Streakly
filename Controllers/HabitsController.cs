@@ -237,7 +237,7 @@ namespace HabitGoalTrackerApp.Controllers
         }
 
         // POST: habits/delete/5
-        [Route("habits/delete")]
+        [Route("habits/delete/{id}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
