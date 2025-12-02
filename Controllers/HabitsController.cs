@@ -192,7 +192,7 @@ namespace HabitGoalTrackerApp.Controllers
         // POST: habits/edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Route("habits/edit")]
+        [Route("habits/edit/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditHabitViewModel model)
