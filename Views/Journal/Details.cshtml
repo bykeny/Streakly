@@ -211,7 +211,7 @@
             const svg = this.querySelector('svg');
             const buttonText = this;
 
-            fetch(`/Journal/ToggleFavorite/${entryId}`, {
+            fetch(`/journal/toggle-favorite/${entryId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

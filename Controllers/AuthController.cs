@@ -33,7 +33,8 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Login
 
-        // GET: /Auth/Login
+        // GET: /auth/login
+        [Route("auth/login")]
         [HttpGet]
         public async Task<IActionResult> Login(string? returnUrl = null)
         {
@@ -50,7 +51,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
-        // POST: /Auth/Login
+        // POST: /auth/login
+        [Route("auth/login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -107,7 +109,8 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Register
 
-        // GET: /Auth/Register
+        // GET: /auth/register
+        [Route("auth/register")]
         [HttpGet]
         public IActionResult Register(string? returnUrl = null)
         {
@@ -121,7 +124,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(new RegisterViewModel { ReturnUrl = returnUrl });
         }
 
-        // POST: /Auth/Register
+        // POST: /auth/register
+        [Route("auth/register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -181,7 +185,8 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Logout
 
-        // POST: /Auth/Logout
+        // POST: /auth/logout
+        [Route("auth/logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(string? returnUrl = null)
@@ -203,14 +208,16 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Forgot Password
 
-        // GET: /Auth/ForgotPassword
+        // GET: /auth/forgot-password
+        [Route("auth/forgot-password")]
         [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
-        // POST: /Auth/ForgotPassword
+        // POST: /auth/forgot-password
+        [Route("auth/forgot-password")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -257,7 +264,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: /Auth/ForgotPasswordConfirmation
+        // GET: /auth/forgot-password-confirmation
+        [Route("auth/forgot-password-confirmation")]
         [HttpGet]
         public IActionResult ForgotPasswordConfirmation()
         {
@@ -268,7 +276,8 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Reset Password
 
-        // GET: /Auth/ResetPassword
+        // GET: /auth/reset-password
+        [Route("auth/reset-password")]
         [HttpGet]
         public IActionResult ResetPassword(string? code = null)
         {
@@ -286,7 +295,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // POST: /Auth/ResetPassword
+        // POST: /auth/reset-password
+        [Route("auth/reset-password")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
@@ -320,7 +330,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: /Auth/ResetPasswordConfirmation
+        // GET: /auth/reset-password-confirmation
+        [Route("auth/reset-password-confirmation")]
         [HttpGet]
         public IActionResult ResetPasswordConfirmation()
         {
@@ -331,7 +342,8 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Access Denied
 
-        // GET: /Auth/AccessDenied
+        // GET: /auth/access-denied
+        [Route("auth/access-denied")]
         [HttpGet]
         public IActionResult AccessDenied()
         {
@@ -342,7 +354,8 @@ namespace HabitGoalTrackerApp.Controllers
 
         #region Two-Factor Authentication (Optional Placeholder)
 
-        // GET: /Auth/LoginWith2fa
+        // GET: /auth/login-with-2fa
+        [Route("auth/login-with-2fa")]
         [HttpGet]
         public IActionResult LoginWith2fa(bool rememberMe, string? returnUrl = null)
         {

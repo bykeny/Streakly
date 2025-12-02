@@ -26,7 +26,8 @@ namespace HabitGoalTrackerApp.Controllers
             _userManager = userManager;
         }
 
-        // GET: Journal
+        // GET: journal
+        [Route("journal")]
         public async Task<IActionResult> Index(int page = 1, string? search = null, string? tag = null)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -43,7 +44,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(entries);
         }
 
-        // GET: Journal/Details/5
+        // GET: journal/details/5
+        [Route("journal/details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -57,7 +59,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(entry);
         }
 
-        // GET: Journal/Create
+        // GET: journal/create
+        [Route("journal/create")]
         public IActionResult Create()
         {
             var model = new CreateJournalEntryViewModel
@@ -67,7 +70,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // POST: Journal/Create
+        // POST: journal/create
+        [Route("journal/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateJournalEntryViewModel model)
@@ -82,7 +86,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Journal/Edit/5
+        // GET: journal/edit/5
+        [Route("journal/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -106,7 +111,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // POST: Journal/Edit/5
+        // POST: journal/edit/5
+        [Route("journal/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditJournalEntryViewModel model)
@@ -134,7 +140,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Journal/Delete/5
+        // GET: journal/delete/5
+        [Route("journal/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -148,7 +155,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(entry);
         }
 
-        // POST: Journal/Delete/5
+        // POST: journal/delete/5
+        [Route("journal/delete")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -164,7 +172,8 @@ namespace HabitGoalTrackerApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Journal/ToggleFavorite/5
+        // POST: journal/toggle-favorite/5
+        [Route("journal/toggle-favorite")]
         [HttpPost]
         public async Task<IActionResult> ToggleFavorite(int id)
         {
@@ -179,7 +188,8 @@ namespace HabitGoalTrackerApp.Controllers
             return Json(new { success = false });
         }
 
-        // GET: Journal/Stats
+        // GET: journal/stats
+        [Route("journal/stats")]
         public async Task<IActionResult> Stats()
         {
             var userId = _userManager.GetUserId(User)!;

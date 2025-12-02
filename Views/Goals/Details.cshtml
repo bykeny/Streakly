@@ -371,7 +371,7 @@
                 // Create a form and submit it
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = `/Goals/DeleteProgress/${progressId}`;
+                form.action = `/goals/delete-progress/${progressId}`;
 
                 // Add CSRF token
                 const token = document.querySelector('input[name="__RequestVerificationToken"]');

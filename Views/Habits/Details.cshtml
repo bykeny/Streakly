@@ -283,7 +283,7 @@
 
                 this.disabled = true;
 
-                fetch(`/Habits/ToggleCompletion/${habitId}`, {
+                fetch(`/habits/toggle-completion/${habitId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -316,7 +316,7 @@
                 return;
             }
 
-            fetch(`/Habits/ToggleStatus/${habitId}`, {
+            fetch(`/habits/toggle-status/${habitId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

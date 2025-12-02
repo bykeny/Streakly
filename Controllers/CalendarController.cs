@@ -18,7 +18,8 @@ namespace HabitGoalTrackerApp.Controllers
             _userManager = userManager;
         }
 
-        // GET: Calendar
+        // GET: calendar
+        [Route("calendar")]
         public async Task<IActionResult> Index(int? year, int? month)
         {
             var currentDate = DateTime.Today;
@@ -31,7 +32,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(calendarData);
         }
 
-        // GET: Calendar/Heatmap
+        // GET: calendar/heatmap
+        [Route("calendar/heatmap")]
         public async Task<IActionResult> Heatmap(DateTime? startDate, DateTime? endDate)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -48,6 +50,7 @@ namespace HabitGoalTrackerApp.Controllers
         }
 
         // API endpoint for AJAX requests
+        [Route("calendar/get-calendar-data")]
         [HttpGet]
         public async Task<IActionResult> GetCalendarData(int year, int month)
         {
@@ -58,6 +61,7 @@ namespace HabitGoalTrackerApp.Controllers
         }
 
         // API endpoint for heatmap data
+        [Route("calendar/get-heat-map-data")]
         [HttpGet]
         public async Task<IActionResult> GetHeatMapData(DateTime startDate, DateTime endDate)
         {

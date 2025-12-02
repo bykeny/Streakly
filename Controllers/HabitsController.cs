@@ -27,7 +27,8 @@ namespace HabitGoalTrackerApp.Controllers
             _userManager = userManager;
         }
 
-        // GET: Habits
+        // GET: habits
+        [Route("habits")]
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User)!;
@@ -66,7 +67,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // GET: Habits/Details/5
+        // GET: habits/details/5
+        [Route("habits/details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -116,15 +118,17 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // GET: Habits/Create
+        // GET: habits/create
+        [Route("habits/create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Habits/Create
+        // POST: habits/create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("habits/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateHabitViewModel model)
@@ -140,7 +144,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Habits/Edit/5
+        // GET: habits/edit/5
+        [Route("habits/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -184,9 +189,10 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // POST: Habits/Edit/5
+        // POST: habits/edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("habits/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditHabitViewModel model)
@@ -215,7 +221,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Habits/Delete/5
+        // GET: habits/delete/5
+        [Route("habits/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -229,7 +236,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(habit);
         }
 
-        // POST: Habits/Delete/5
+        // POST: habits/delete/5
+        [Route("habits/delete")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -251,6 +259,7 @@ namespace HabitGoalTrackerApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("habits/toggle-completion")]
         [HttpPost]
         public async Task<IActionResult> ToggleCompletion(int id)
         {
@@ -282,6 +291,7 @@ namespace HabitGoalTrackerApp.Controllers
             return habits.Any(h => h.Id == id);
         }
 
+        [Route("habits/toggle-status")]
         [HttpPost]
         public async Task<IActionResult> ToggleStatus(int id, bool isActive)
         {

@@ -33,7 +33,8 @@ namespace HabitGoalTrackerApp.Controllers
             _environment = environment;
         }
 
-        // GET: Profile
+        // GET: profile
+        [Route("profile")]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -80,7 +81,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // GET: Profile/Edit
+        // GET: profile/edit
+        [Route("profile/edit")]
         public async Task<IActionResult> Edit()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -108,7 +110,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // POST: Profile/Edit
+        // POST: profile/edit
+        [Route("profile/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProfileViewModel model)
@@ -228,13 +231,15 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Profile/ChangePassword
+        // GET: profile/change-password
+        [Route("profile/change-password")]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
-        // POST: Profile/ChangePassword
+        // POST: profile/change-password
+        [Route("profile/change-password")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)

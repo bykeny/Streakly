@@ -239,7 +239,7 @@ else
                 // Disable button during request
                 this.disabled = true;
 
-                fetch(`/Habits/ToggleCompletion/${habitId}`, {
+                fetch(`/habits/toggle-completion/${habitId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

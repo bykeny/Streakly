@@ -23,6 +23,7 @@ namespace HabitGoalTrackerApp.Controllers
             _userManager = userManager;
         }
 
+        [Route("dashboard")]
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User)!;

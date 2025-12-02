@@ -26,7 +26,8 @@ namespace HabitGoalTrackerApp.Controllers
             _userManager = userManager;
         }
 
-        // GET: Goals
+        // GET: goals
+        [Route("goals")]
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User)!;
@@ -55,7 +56,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // GET: Goals/Details/5
+        // GET: goals/details/5
+        [Route("goals/details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -109,15 +111,17 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // GET: Goals/Create
+        // GET: goals/create
+        [Route("goals/create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Goals/Create
+        // POST: goals/create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("goals/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateGoalViewModel model)
@@ -140,7 +144,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Goals/Edit/5
+        // GET: goals/edit/5
+        [Route("goals/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -165,9 +170,10 @@ namespace HabitGoalTrackerApp.Controllers
             return View(viewModel);
         }
 
-        // POST: Goals/Edit/5
+        // POST: goals/edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("goals/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditGoalViewModel model)
@@ -196,7 +202,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(model);
         }
 
-        // GET: Goals/Delete/5
+        // GET: goals/delete/5
+        [Route("goals/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = _userManager.GetUserId(User)!;
@@ -210,7 +217,8 @@ namespace HabitGoalTrackerApp.Controllers
             return View(goal);
         }
 
-        // POST: Goals/Delete/5
+        // POST: goals/delete/5
+        [Route("goals/delete")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -231,7 +239,8 @@ namespace HabitGoalTrackerApp.Controllers
         //    return _context.Goals.Any(e => e.Id == id);
         //}
 
-        // POST: Goals/AddProgress/5
+        // POST: goals/add-progress/5
+        [Route("goals/add-progress")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProgress(int id, AddProgressViewModel model)
@@ -273,6 +282,7 @@ namespace HabitGoalTrackerApp.Controllers
         //    return Json(new { success = false, message = "Failed to delete progress entry." });
         //}
 
+        [Route("goals/delete-progress")]
         public async Task<IActionResult> DeleteProgress(int id)
         {
             var userId = _userManager.GetUserId(User)!;

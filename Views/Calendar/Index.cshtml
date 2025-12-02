@@ -265,7 +265,7 @@
             // Show loading state
             document.getElementById('calendarBody').style.opacity = '0.5';
 
-            fetch(`/Calendar/GetCalendarData?year=${year}&month=${month}`)
+            fetch(`/calendar/get-calendar-data?year=${year}&month=${month}`)
                 .then(response => response.json())
                 .then(data => {
                     updateCalendarDisplay(data);
@@ -286,7 +286,7 @@
             document.getElementById('currentMonthYear').textContent = `${data.monthName} ${data.year}`;
 
             // Update URL without page reload
-            const newUrl = `/Calendar?year=${data.year}&month=${data.month}`;
+            const newUrl = `/calendar?year=${data.year}&month=${data.month}`;
             window.history.pushState({year: data.year, month: data.month}, '', newUrl);
 
             // Here you would rebuild the calendar HTML with the new data

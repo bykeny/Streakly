@@ -224,7 +224,7 @@ else
                 const entryId = this.dataset.entryId;
                 const svg = this.querySelector('svg');
 
-                fetch(`/Journal/ToggleFavorite/${entryId}`, {
+                fetch(`/journal/toggle-favorite/${entryId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
