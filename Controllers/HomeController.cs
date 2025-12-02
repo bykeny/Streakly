@@ -25,6 +25,12 @@ namespace HabitGoalTrackerApp.Controllers
             return View();
         }
 
+        [Route("terms")]
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
         [Route("error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
