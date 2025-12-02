@@ -1,260 +1,309 @@
 ﻿@model List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>
 
 @{
-    ViewData["Title"] = "Habit Heatmap";
+    ViewData["Title"] = "Habit Consistency";
     var startDate = ViewBag.StartDate as DateTime? ?? DateTime.Today.AddDays(-365);
     var endDate = ViewBag.EndDate as DateTime? ?? DateTime.Today;
+
+    // Pre-calculate stats
+    var streaks = CalculateStreaks(Model);
+    var currentStreak = CalculateCurrentStreak(Model);
+    var longestStreak = streaks.Any() ? streaks.Max() : 0;
+    
+    var activeDays = Model.Count(d => d.CompletionRate > 0);
+    var totalDays = (endDate - startDate).Days + 1;
+    var consistencyRate = totalDays > 0 ? (double)activeDays / totalDays * 100 : 0;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h2 mb-1">Habit Heatmap</h1>
-        <p class="text-muted mb-0">Visualize your habit consistency over time</p>
+<div class="container-fluid p-0 fade-in">
+    <!-- Header Section -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h1 class="h3 mb-1 text-dark">Habit Consistency</h1>
+            <p class="text-muted mb-0">Visualize your daily progress and build momentum.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Index" class="btn btn-outline-primary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+                </svg>
+                Calendar View
+            </a>
+        </div>
     </div>
-    <div class="d-flex gap-2">
-        <a asp-action="Index" class="btn btn-outline-primary">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
-            </svg>
-            Calendar View
-        </a>
-    </div>
-</div>
 
-<!-- Date Range Selector -->
-<div class="row mb-4">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-body">
-                <form method="get" class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label for="startDate" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="startDate" name="startDate" value="@startDate.ToString("yyyy-MM-dd")">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="endDate" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="endDate" name="endDate" value="@endDate.ToString("yyyy-MM-dd")">
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary">Update Range</button>
-                    </div>
-                </form>
+    <!-- Controls & Summary Cards -->
+    <div class="row g-4 mb-4">
+        <!-- Date Filter -->
+        <div class="col-xl-8" style="z-index: 2;">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 d-flex flex-column justify-content-center">
+                    <form method="get" id="dateRangeForm" class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label small text-muted fw-bold text-uppercase letter-spacing-1">Start Date</label>
+                            <input type="date" class="form-control bg-light border-0 py-2" id="startDate" name="startDate" value="@startDate.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label small text-muted fw-bold text-uppercase letter-spacing-1">End Date</label>
+                            <input type="date" class="form-control bg-light border-0 py-2" id="endDate" name="endDate" value="@endDate.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary px-4 py-2 fw-medium flex-grow-1">Update</button>
+                                <div class="dropdown" style="position: relative; z-index: 1030;">
+                                    <button class="btn btn-light border py-2 px-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                        </svg>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                        <li><h6 class="dropdown-header text-uppercase small fw-bold">Quick Ranges</h6></li>
+                                        <li><button type="button" class="dropdown-item" onclick="setDateRange(30)">Last 30 Days</button></li>
+                                        <li><button type="button" class="dropdown-item" onclick="setDateRange(90)">Last 3 Months</button></li>
+                                        <li><button type="button" class="dropdown-item" onclick="setDateRange(180)">Last 6 Months</button></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><button type="button" class="dropdown-item" onclick="setDateRange(365)">Last Year</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                <div class="mt-3">
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(30)">Last 30 days</button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(90)">Last 3 months</button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(365)">Last year</button>
+        <!-- Stats Cards -->
+        <div class="col-xl-4">
+            <div class="row g-3 h-100">
+                <div class="col-6">
+                    <div class="card border-0 shadow-sm h-100 bg-primary text-white position-relative overflow-hidden">
+                        <div class="card-body text-center d-flex flex-column justify-content-center p-3">
+                            <div class="display-5 fw-bold mb-1">@currentStreak</div>
+                            <div class="small text-white-50 text-uppercase fw-bold letter-spacing-1">Current Streak</div>
+                            <svg class="position-absolute opacity-10" style="right: -10px; bottom: -10px;" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z"/>
+                                <path d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5V12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5ZM10 7a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7Zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1Zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center d-flex flex-column justify-content-center p-3">
+                            <div class="display-5 fw-bold mb-1 text-success">@longestStreak</div>
+                            <div class="small text-muted text-uppercase fw-bold letter-spacing-1">Longest Streak</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <!-- Heatmap Stats -->
-        <div class="card">
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-4">
-                        <div class="stat-number text-primary">@Model.Count(d => d.CompletionRate > 0)</div>
-                        <div class="stat-label">Active Days</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="stat-number text-success">@Model.Count(d => d.CompletionRate >= 80)</div>
-                        <div class="stat-label">Great Days</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="stat-number text-info">@(Model.Any() ? Math.Round(Model.Average(d => d.CompletionRate), 1) : 0)%</div>
-                        <div class="stat-label">Avg Rate</div>
-                    </div>
+
+    <!-- Main Heatmap Card -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 pt-4 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <h5 class="card-title mb-0 text-white">Activity Map</h5>
+            
+            <!-- Legend -->
+            <div class="d-flex align-items-center gap-2 small bg-light rounded-pill px-3 py-1">
+                <span class="text-muted fw-medium" style="font-size: 0.75rem;">Less</span>
+                <div class="d-flex gap-1">
+                    <div class="legend-square level-0" data-bs-toggle="tooltip" title="No activity"></div>
+                    <div class="legend-square level-1" data-bs-toggle="tooltip" title="1-25%"></div>
+                    <div class="legend-square level-2" data-bs-toggle="tooltip" title="26-50%"></div>
+                    <div class="legend-square level-3" data-bs-toggle="tooltip" title="51-75%"></div>
+                    <div class="legend-square level-4" data-bs-toggle="tooltip" title="76-100%"></div>
                 </div>
+                <span class="text-muted fw-medium" style="font-size: 0.75rem;">More</span>
             </div>
         </div>
-    </div>
-</div>
+        
+        <div class="card-body px-4 pb-4">
+            <div class="heatmap-scroll-container custom-scrollbar">
+                <div class="heatmap-grid-layout">
+                    <!-- Month Labels Row -->
+                    <div class="heatmap-months-row">
+                        <div class="heatmap-y-axis-spacer"></div> <!-- Spacer for day labels -->
+                        <div class="heatmap-months-container">
+                            @{
+                                var currentDate = startDate;
+                                var weeks = new List<List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>>();
+                                var currentWeek = new List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>();
 
-<!-- Heatmap Container -->
-<div class="card">
-    <div class="card-body">
-        <div class="heatmap-container">
-            <!-- Heatmap Legend -->
-            <div class="heatmap-legend mb-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <span class="small text-muted">Less</span>
-                    <div class="d-flex gap-1">
-                        <div class="heatmap-legend-square level-0" title="No activity"></div>
-                        <div class="heatmap-legend-square level-1" title="1-25% completion"></div>
-                        <div class="heatmap-legend-square level-2" title="26-50% completion"></div>
-                        <div class="heatmap-legend-square level-3" title="51-75% completion"></div>
-                        <div class="heatmap-legend-square level-4" title="76-100% completion"></div>
-                    </div>
-                    <span class="small text-muted">More</span>
-                </div>
-            </div>
+                                // Pad start
+                                var startDayOfWeek = (int)currentDate.DayOfWeek;
+                                for (int i = 0; i < startDayOfWeek; i++) currentWeek.Add(null);
 
-            <!-- Heatmap Grid -->
-            <div class="heatmap-grid" id="heatmapGrid">
-                @{
-                    var currentDate = startDate;
-                    var weeks = new List<List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>>();
-                    var currentWeek = new List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>();
-
-                    // Pad to start on Sunday
-                    var startDayOfWeek = (int)currentDate.DayOfWeek;
-                    for (int i = 0; i < startDayOfWeek; i++)
-                    {
-                        currentWeek.Add(null);
-                    }
-
-                    while (currentDate <= endDate)
-                    {
-                        var dayData = Model.FirstOrDefault(d => d.Date.Date == currentDate.Date);
-                        if (dayData == null)
-                        {
-                            dayData = new HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData
-                            {
-                                Date = currentDate,
-                                CompletedHabits = 0,
-                                TotalHabits = 0,
-                                CompletionRate = 0,
-                                Level = 0
-                            };
-                        }
-
-                        currentWeek.Add(dayData);
-
-                        if (currentWeek.Count == 7)
-                        {
-                            weeks.Add(currentWeek);
-                            currentWeek = new List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>();
-                        }
-
-                        currentDate = currentDate.AddDays(1);
-                    }
-
-                    // Add remaining days to last week
-                    if (currentWeek.Any())
-                    {
-                        while (currentWeek.Count < 7)
-                        {
-                            currentWeek.Add(null);
-                        }
-                        weeks.Add(currentWeek);
-                    }
-                }
-
-                <!-- Month labels -->
-                <div class="heatmap-months">
-                    @{
-                        var monthLabels = new List<string>();
-                        var labelDate = startDate;
-                        var weekIndex = 0;
-
-                        while (labelDate <= endDate)
-                        {
-                            if (labelDate.Day <= 7 || labelDate == startDate)
-                            {
-                                monthLabels.Add($"<div class='heatmap-month-label' style='grid-column: {weekIndex + 1}'>{labelDate.ToString("MMM")}</div>");
-                            }
-                            labelDate = labelDate.AddDays(7);
-                            weekIndex++;
-                        }
-                    }
-                    @Html.Raw(string.Join("", monthLabels))
-                </div>
-
-                <!-- Day labels -->
-                <div class="heatmap-days">
-                    <div class="heatmap-day-label">Sun</div>
-                    <div class="heatmap-day-label">Mon</div>
-                    <div class="heatmap-day-label">Tue</div>
-                    <div class="heatmap-day-label">Wed</div>
-                    <div class="heatmap-day-label">Thu</div>
-                    <div class="heatmap-day-label">Fri</div>
-                    <div class="heatmap-day-label">Sat</div>
-                </div>
-
-                <!-- Heatmap squares -->
-                <div class="heatmap-squares">
-                    @foreach (var week in weeks)
-                    {
-                        <div class="heatmap-week">
-                            @foreach (var day in week)
-                            {
-                                @if (day != null)
+                                while (currentDate <= endDate)
                                 {
-                                    <div class="heatmap-square level-@day.Level"
-                                         data-date="@day.Date.ToString("yyyy-MM-dd")"
-                                         data-completion="@day.CompletionRate"
-                                         data-habits="@day.CompletedHabits/@day.TotalHabits"
-                                         data-bs-toggle="tooltip"
-                                         title="@day.Date.ToString("MMM dd, yyyy"): @day.CompletedHabits/@day.TotalHabits habits (@Math.Round(day.CompletionRate, 1)%)">
-                                    </div>
+                                    var dayData = Model.FirstOrDefault(d => d.Date.Date == currentDate.Date) ?? new HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData
+                                    {
+                                        Date = currentDate,
+                                        CompletionRate = 0,
+                                        Level = 0
+                                    };
+
+                                    currentWeek.Add(dayData);
+
+                                    if (currentWeek.Count == 7)
+                                    {
+                                        weeks.Add(currentWeek);
+                                        currentWeek = new List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData>();
+                                    }
+                                    currentDate = currentDate.AddDays(1);
                                 }
-                                else
+                                if (currentWeek.Any())
                                 {
-                                    <div class="heatmap-square empty"></div>
+                                    while (currentWeek.Count < 7) currentWeek.Add(null);
+                                    weeks.Add(currentWeek);
+                                }
+
+                                // Render Month Labels
+                                var labelDate = startDate;
+                                for (int w = 0; w < weeks.Count; w++)
+                                {
+                                    // Show label if it's the first week of a month or the very first week
+                                    // We approximate the date of the week by adding 7 days per iteration
+                                    var weekStartDate = startDate.AddDays(w * 7);
+                                    // Adjust to find if a month starts in this week
+                                    bool isNewMonth = false;
+                                    if (w == 0) { isNewMonth = true; }
+                                    else 
+                                    {
+                                        var prevWeekStart = weekStartDate.AddDays(-7);
+                                        if (weekStartDate.Month != prevWeekStart.Month) isNewMonth = true;
+                                    }
+
+                                    if (isNewMonth)
+                                    {
+                                        <div class="heatmap-month-label" style="grid-column: @(w + 1)">@weekStartDate.ToString("MMM")</div>
+                                    }
                                 }
                             }
                         </div>
-                    }
+                    </div>
+
+                    <!-- Grid Body -->
+                    <div class="heatmap-body">
+                        <!-- Day Labels (Mon, Wed, Fri) -->
+                        <div class="heatmap-days-labels">
+                            <div class="day-label"></div> <!-- Sun -->
+                            <div class="day-label">Mon</div>
+                            <div class="day-label"></div> <!-- Tue -->
+                            <div class="day-label">Wed</div>
+                            <div class="day-label"></div> <!-- Thu -->
+                            <div class="day-label">Fri</div>
+                            <div class="day-label"></div> <!-- Sat -->
+                        </div>
+
+                        <!-- Squares -->
+                        <div class="heatmap-squares-container">
+                            @foreach (var week in weeks)
+                            {
+                                <div class="heatmap-week-column">
+                                    @foreach (var day in week)
+                                    {
+                                        if (day != null)
+                                        {
+                                            <div class="heatmap-cell level-@day.Level"
+                                                 data-date="@day.Date.ToString("yyyy-MM-dd")"
+                                                 data-bs-toggle="tooltip"
+                                                 data-bs-html="true"
+                                                 title="<strong>@day.Date.ToString("MMM dd")</strong><br/>@day.CompletedHabits of @day.TotalHabits habits<br/>@Math.Round(day.CompletionRate)% completed">
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="heatmap-cell empty"></div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Detailed Stats -->
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h6 class="fw-semibold mb-3">Completion Streaks</h6>
-                <div class="streak-info">
-                    @{
-                        var streaks = CalculateStreaks(Model);
-                        var currentStreak = CalculateCurrentStreak(Model);
-                        var longestStreak = streaks.Any() ? streaks.Max() : 0;
-                    }
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Current Streak:</span>
-                        <span class="fw-semibold text-warning">@currentStreak days</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Longest Streak:</span>
-                        <span class="fw-semibold text-success">@longestStreak days</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Total Streaks:</span>
-                        <span class="fw-semibold text-info">@streaks.Count</span>
-                    </div>
+    <!-- Detailed Breakdown Section -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h6 class="card-title mb-0 text-white">Performance Breakdown</h6>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <h6 class="fw-semibold mb-3">Performance Breakdown</h6>
-                <div class="performance-breakdown">
+                <div class="card-body px-4 pb-4">
                     @{
                         var perfect = Model.Count(d => d.CompletionRate == 100);
                         var good = Model.Count(d => d.CompletionRate >= 75 && d.CompletionRate < 100);
                         var okay = Model.Count(d => d.CompletionRate >= 50 && d.CompletionRate < 75);
                         var poor = Model.Count(d => d.CompletionRate > 0 && d.CompletionRate < 50);
-                        var none = Model.Count(d => d.CompletionRate == 0);
+                        var total = Model.Count;
+                        
+                        string GetWidth(int count) => total > 0 ? $"{(double)count / total * 100}%" : "0%";
                     }
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Perfect Days (100%):</span>
-                        <span class="fw-semibold text-success">@perfect</span>
+
+                    <div class="d-flex flex-column gap-3">
+                        <!-- Perfect -->
+                        <div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small text-dark">Perfect Days (100%)</span>
+                                <span class="small text-muted">@perfect days</span>
+                            </div>
+                            <div class="progress rounded-pill" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: @GetWidth(perfect)"></div>
+                            </div>
+                        </div>
+
+                        <!-- Good -->
+                        <div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small text-dark">Good Days (75-99%)</span>
+                                <span class="small text-muted">@good days</span>
+                            </div>
+                            <div class="progress rounded-pill" style="height: 8px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: @GetWidth(good)"></div>
+                            </div>
+                        </div>
+
+                        <!-- Okay -->
+                        <div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small text-dark">Okay Days (50-74%)</span>
+                                <span class="small text-muted">@okay days</span>
+                            </div>
+                            <div class="progress rounded-pill" style="height: 8px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: @GetWidth(okay)"></div>
+                            </div>
+                        </div>
+
+                        <!-- Poor -->
+                        <div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="small text-dark">Poor Days (1-49%)</span>
+                                <span class="small text-muted">@poor days</span>
+                            </div>
+                            <div class="progress rounded-pill" style="height: 8px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: @GetWidth(poor)"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Good Days (75-99%):</span>
-                        <span class="fw-semibold text-info">@good</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Okay Days (50-74%):</span>
-                        <span class="fw-semibold text-warning">@okay</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Poor Days (1-49%):</span>
-                        <span class="fw-semibold text-danger">@poor</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>No Activity:</span>
-                        <span class="fw-semibold text-muted">@none</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100 bg-light">
+                <div class="card-body d-flex align-items-center justify-content-center text-center p-5">
+                    <div>
+                        <div class="mb-3">
+                            <span class="display-4 fw-bold text-primary">@Math.Round(consistencyRate, 1)%</span>
+                        </div>
+                        <h5 class="fw-bold text-dark">Consistency Score</h5>
+                        <p class="text-muted small mb-0 px-4">
+                            This score reflects the percentage of days you've logged at least one habit activity within the selected period. Keep it up!
+                        </p>
                     </div>
                 </div>
             </div>
@@ -262,19 +311,175 @@
     </div>
 </div>
 
+<style>
+    :root {
+        --heatmap-size: 12px;
+        --heatmap-gap: 3px;
+        --heatmap-radius: 2px;
+        
+        /* GitHub-like colors */
+        --color-level-0: #ebedf0;
+        --color-level-1: #9be9a8;
+        --color-level-2: #40c463;
+        --color-level-3: #30a14e;
+        --color-level-4: #216e39;
+    }
+
+    [data-theme="dark"] {
+        --color-level-0: #161b22;
+        --color-level-1: #0e4429;
+        --color-level-2: #006d32;
+        --color-level-3: #26a641;
+        --color-level-4: #39d353;
+    }
+
+    .letter-spacing-1 { letter-spacing: 1px; }
+    
+    .btn-white {
+        background-color: #fff;
+        color: #333;
+    }
+    .btn-white:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Heatmap Styles */
+    .heatmap-scroll-container {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .heatmap-grid-layout {
+        display: inline-flex;
+        flex-direction: column;
+        min-width: max-content;
+    }
+
+    .heatmap-months-row {
+        display: flex;
+        margin-bottom: 5px;
+    }
+
+    .heatmap-y-axis-spacer {
+        width: 30px; /* Matches day labels width */
+        flex-shrink: 0;
+    }
+
+    .heatmap-months-container {
+        display: grid;
+        grid-auto-columns: calc(var(--heatmap-size) + var(--heatmap-gap));
+        grid-auto-flow: column;
+        gap: 0; /* Gap handled by grid columns */
+    }
+
+    .heatmap-month-label {
+        font-size: 10px;
+        color: #6c757d;
+        grid-row: 1;
+        white-space: nowrap;
+        overflow: visible;
+    }
+
+    .heatmap-body {
+        display: flex;
+    }
+
+    .heatmap-days-labels {
+        display: grid;
+        grid-template-rows: repeat(7, var(--heatmap-size));
+        gap: var(--heatmap-gap);
+        width: 30px;
+        margin-right: 5px;
+        flex-shrink: 0;
+    }
+
+    .day-label {
+        font-size: 10px;
+        line-height: var(--heatmap-size);
+        color: #6c757d;
+        text-align: right;
+        padding-right: 4px;
+        /* Only show Mon, Wed, Fri */
+        visibility: visible; 
+    }
+
+    .heatmap-squares-container {
+        display: flex;
+        gap: var(--heatmap-gap);
+    }
+
+    .heatmap-week-column {
+        display: grid;
+        grid-template-rows: repeat(7, var(--heatmap-size));
+        gap: var(--heatmap-gap);
+    }
+
+    .heatmap-cell {
+        width: var(--heatmap-size);
+        height: var(--heatmap-size);
+        border-radius: var(--heatmap-radius);
+        background-color: var(--color-level-0);
+        cursor: pointer;
+        transition: transform 0.1s ease-in-out;
+    }
+
+    .heatmap-cell:hover {
+        transform: scale(1.3);
+        z-index: 10;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .heatmap-cell.empty {
+        background-color: transparent;
+        pointer-events: none;
+    }
+
+    .level-0 { background-color: var(--color-level-0); }
+    .level-1 { background-color: var(--color-level-1); }
+    .level-2 { background-color: var(--color-level-2); }
+    .level-3 { background-color: var(--color-level-3); }
+    .level-4 { background-color: var(--color-level-4); }
+
+    /* Legend */
+    .legend-square {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+    }
+
+    /* Custom Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #bbb;
+    }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize tooltips
+        // Initialize Bootstrap tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
 
-        // Heatmap square click handler
-        document.querySelectorAll('.heatmap-square').forEach(square => {
-            square.addEventListener('click', function() {
-                if (this.dataset.date) {
-                    showDayDetails(this.dataset.date);
+        // Click handler for cells
+        document.querySelectorAll('.heatmap-cell').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const date = this.dataset.date;
+                if (date) {
+                    // Optional: Navigate to day view or show modal
+                    // window.location.href = `/calendar/day?date=${date}`;
+                    console.log('Clicked date:', date);
                 }
             });
         });
@@ -287,189 +492,11 @@
 
         document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
         document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
-    }
-
-    function showDayDetails(date) {
-        // You could implement a modal or redirect to calendar view for this date
-        window.location.href = `/calendar?year=${new Date(date).getFullYear()}&month=${new Date(date).getMonth() + 1}`;
+        
+        // Auto submit the correct form
+        document.getElementById('dateRangeForm').submit();
     }
 </script>
-
-<style>
-    .heatmap-container {
-        overflow-x: auto;
-        padding: 1rem 0;
-    }
-
-    .heatmap-legend {
-        display: flex;
-        justify-content: center;
-    }
-
-    .heatmap-legend-square {
-        width: 12px;
-        height: 12px;
-        border-radius: 2px;
-        cursor: pointer;
-    }
-
-    .heatmap-grid {
-        display: grid;
-        grid-template-rows: auto auto 1fr;
-        gap: 8px;
-        min-width: 800px;
-    }
-
-    .heatmap-months {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(14px, 1fr));
-        gap: 2px;
-        margin-bottom: 4px;
-    }
-
-    .heatmap-month-label {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        text-align: left;
-    }
-
-    .heatmap-days {
-        display: grid;
-        grid-template-rows: repeat(7, 12px);
-        gap: 2px;
-        margin-right: 8px;
-        width: 30px;
-    }
-
-    .heatmap-day-label {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 4px;
-    }
-
-    .heatmap-squares {
-        display: flex;
-        gap: 2px;
-        flex-wrap: nowrap;
-    }
-
-    .heatmap-week {
-        display: grid;
-        grid-template-rows: repeat(7, 12px);
-        gap: 2px;
-    }
-
-    .heatmap-square {
-        width: 12px;
-        height: 12px;
-        border-radius: 2px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border: 1px solid var(--border-color);
-    }
-
-        .heatmap-square:hover {
-            transform: scale(1.2);
-            z-index: 1;
-            border-color: var(--primary-color);
-        }
-
-        .heatmap-square.empty {
-            background: transparent;
-            border: none;
-            cursor: default;
-        }
-
-    /* Heatmap levels - GitHub-style */
-    .level-0, .heatmap-legend-square.level-0 {
-        background-color: var(--gray-100);
-    }
-
-    .level-1, .heatmap-legend-square.level-1 {
-        background-color: #c6e48b;
-    }
-
-    .level-2, .heatmap-legend-square.level-2 {
-        background-color: #7bc96f;
-    }
-
-    .level-3, .heatmap-legend-square.level-3 {
-        background-color: #239a3b;
-    }
-
-    .level-4, .heatmap-legend-square.level-4 {
-        background-color: #196127;
-    }
-
-    /* Dark theme adjustments */
-    [data-theme="dark"] .level-0 {
-        background-color: var(--gray-800);
-    }
-
-    [data-theme="dark"] .level-1 {
-        background-color: #0e4429;
-    }
-
-    [data-theme="dark"] .level-2 {
-        background-color: #006d32;
-    }
-
-    [data-theme="dark"] .level-3 {
-        background-color: #26a641;
-    }
-
-    [data-theme="dark"] .level-4 {
-        background-color: #39d353;
-    }
-
-    .stat-number {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-    }
-
-    .stat-label {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .streak-info, .performance-breakdown {
-        background-color: var(--bg-secondary);
-        padding: 1rem;
-        border-radius: 0.5rem;
-    }
-
-@*    @media (max-width: 768px) {
-        .heatmap-container
-
-    {
-        padding: 0.5rem 0;
-    }
-
-    .heatmap-grid {
-        min-width: 600px;
-    }
-
-    .heatmap-square, .heatmap-legend-square {
-        width: 10px;
-        height: 10px;
-    }
-
-    .heatmap-days {
-        width: 25px;
-    }
-
-    .heatmap-day-label {
-        font-size: 0.625rem;
-    }
-
-    } *@
-</style>
 
 @functions {
     private List<int> CalculateStreaks(List<HabitGoalTrackerApp.Models.ViewModels.CalendarHeatmapData> data)
