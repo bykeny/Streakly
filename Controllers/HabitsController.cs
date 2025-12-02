@@ -259,7 +259,7 @@ namespace HabitGoalTrackerApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Route("habits/toggle-completion")]
+        [Route("habits/toggle-completion/{id}")]
         [HttpPost]
         public async Task<IActionResult> ToggleCompletion(int id)
         {
@@ -291,7 +291,7 @@ namespace HabitGoalTrackerApp.Controllers
             return habits.Any(h => h.Id == id);
         }
 
-        [Route("habits/toggle-status")]
+        [Route("habits/toggle-status/{id}")]
         [HttpPost]
         public async Task<IActionResult> ToggleStatus(int id, bool isActive)
         {

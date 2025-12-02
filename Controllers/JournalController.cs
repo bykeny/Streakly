@@ -173,7 +173,7 @@ namespace HabitGoalTrackerApp.Controllers
         }
 
         // POST: journal/toggle-favorite/5
-        [Route("journal/toggle-favorite")]
+        [Route("journal/toggle-favorite/{id}")]
         [HttpPost]
         public async Task<IActionResult> ToggleFavorite(int id)
         {

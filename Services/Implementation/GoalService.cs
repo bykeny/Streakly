@@ -79,6 +79,7 @@ namespace HabitGoalTrackerApp.Services.Implementation
         public async Task<bool> DeleteProgressAsync(int progressId, string userId)
         {
             var progress = await _context.GoalProgresses
+                .Include(p => p.Goal)
                 .FirstOrDefaultAsync(p => p.Id == progressId && p.Goal.UserId == userId);
 
             if (progress == null)

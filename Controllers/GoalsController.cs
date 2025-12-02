@@ -282,7 +282,9 @@ namespace HabitGoalTrackerApp.Controllers
         //    return Json(new { success = false, message = "Failed to delete progress entry." });
         //}
 
-        [Route("goals/delete-progress")]
+        [Route("goals/delete-progress/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProgress(int id)
         {
             var userId = _userManager.GetUserId(User)!;
