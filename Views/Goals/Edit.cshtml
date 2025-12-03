@@ -84,6 +84,15 @@
                             <!-- Current Progress Info -->
                             <div class="current-progress-info">
                                 <h6 class="fw-semibold mb-3">Current Progress</h6>
+                                <div class="progress-display mb-3">
+                                    <div class="text-center p-3 bg-white rounded-3 border">
+                                        <div class="h3 mb-1 text-primary">@Model.CurrentValue <small class="text-muted">/ @Model.TargetValue</small></div>
+                                        <small class="text-muted">@(Model.Unit ?? "units")</small>
+                                        <div class="progress mt-2" style="height: 8px;">
+                                            <div class="progress-bar" style="width: @((Model.TargetValue > 0 ? (Model.CurrentValue / Model.TargetValue * 100) : 0).ToString("F0"))%"></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="alert alert-info">
                                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -107,7 +116,7 @@
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="h5 mb-0" id="previewProgress">0/@Model.TargetValue</div>
+                                    <div class="h5 mb-0" id="previewProgress">@Model.CurrentValue/@Model.TargetValue</div>
                                     <small class="text-muted" id="previewUnit">@Model.Unit</small>
                                 </div>
                             </div>
@@ -131,48 +140,105 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Live preview updates
+        console.log('Goal Edit - Initializing preview...');
+        
+        // Get form inputs
         const titleInput = document.getElementById('Title');
         const descriptionInput = document.getElementById('Description');
         const targetValueInput = document.getElementById('TargetValue');
         const unitInput = document.getElementById('Unit');
         const categorySelect = document.getElementById('Category');
+        const currentValue = @Model.CurrentValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-        [titleInput, descriptionInput, targetValueInput, unitInput, categorySelect].forEach(input => {
-            if (input) {
-                input.addEventListener('input', updatePreview);
-            }
+        // Debug: Check if elements exist
+        console.log('Elements found:', {
+            titleInput: !!titleInput,
+            descriptionInput: !!descriptionInput,
+            targetValueInput: !!targetValueInput,
+            unitInput: !!unitInput,
+            categorySelect: !!categorySelect,
+            currentValue: currentValue
         });
 
-        function updatePreview() {
-            const title = titleInput?.value || 'Goal title';
-            const description = descriptionInput?.value || 'Description';
-            const targetValue = parseFloat(targetValueInput?.value) || 0;
-            const unit = unitInput?.value || 'units';
-            const categoryValue = categorySelect?.value || '0';
-
-            const categories = {
-                '0': 'Personal', '1': 'Health', '2': 'Career', '3': 'Education',
-                '4': 'Finance', '5': 'Fitness', '6': 'Hobby', '7': 'Travel',
-                '8': 'Relationship', '9': 'Other'
-            };
-
-            const categoryColors = {
-                '0': 'personal', '1': 'health', '2': 'career', '3': 'education',
-                '4': 'finance', '5': 'fitness', '6': 'hobby', '7': 'travel',
-                '8': 'relationship', '9': 'other'
-            };
-
-            document.getElementById('previewTitle').textContent = title;
-            document.getElementById('previewDescription').textContent = description;
-            document.getElementById('previewProgress').textContent = `0/${targetValue}`;
-            document.getElementById('previewUnit').textContent = unit;
-
-            const categoryBadge = document.getElementById('previewCategory');
-            categoryBadge.textContent = categories[categoryValue];
-            categoryBadge.className = `category-badge category-${categoryColors[categoryValue]}`;
+        if (!titleInput || !descriptionInput || !targetValueInput || !unitInput || !categorySelect) {
+            console.error('One or more form elements not found!');
+            return;
         }
 
+        // Category mappings
+        const categories = {
+            '0': 'Personal', '1': 'Health', '2': 'Career', '3': 'Education',
+            '4': 'Finance', '5': 'Fitness', '6': 'Hobby', '7': 'Travel',
+            '8': 'Relationship', '9': 'Other'
+        };
+
+        const categoryColors = {
+            '0': 'personal', '1': 'health', '2': 'career', '3': 'education',
+            '4': 'finance', '5': 'fitness', '6': 'hobby', '7': 'travel',
+            '8': 'relationship', '9': 'other'
+        };
+
+        // Update preview function
+        function updatePreview() {
+            console.log('Updating preview...');
+            
+            const title = titleInput.value || 'Goal title';
+            const description = descriptionInput.value || 'Description';
+            const targetValue = parseFloat(targetValueInput.value) || 0;
+            const unit = unitInput.value || 'units';
+            const categoryValue = categorySelect.value || '0';
+
+            console.log('Values:', { title, description, targetValue, unit, categoryValue });
+
+            // Update preview elements
+            const previewTitle = document.getElementById('previewTitle');
+            const previewDescription = document.getElementById('previewDescription');
+            const previewProgress = document.getElementById('previewProgress');
+            const previewUnit = document.getElementById('previewUnit');
+            const categoryBadge = document.getElementById('previewCategory');
+
+            if (previewTitle) previewTitle.textContent = title;
+            if (previewDescription) previewDescription.textContent = description;
+            if (previewProgress) previewProgress.textContent = currentValue + '/' + targetValue;
+            if (previewUnit) previewUnit.textContent = unit;
+
+            // Update category badge
+            if (categoryBadge) {
+                categoryBadge.textContent = categories[categoryValue];
+                categoryBadge.className = 'category-badge category-' + categoryColors[categoryValue];
+            }
+
+            console.log('Preview updated successfully');
+        }
+
+        // Add event listeners for real-time updates
+        titleInput.addEventListener('input', function() {
+            console.log('Title changed:', this.value);
+            updatePreview();
+        });
+        
+        descriptionInput.addEventListener('input', function() {
+            console.log('Description changed:', this.value);
+            updatePreview();
+        });
+        
+        targetValueInput.addEventListener('input', function() {
+            console.log('Target value changed:', this.value);
+            updatePreview();
+        });
+        
+        unitInput.addEventListener('input', function() {
+            console.log('Unit changed:', this.value);
+            updatePreview();
+        });
+        
+        categorySelect.addEventListener('change', function() {
+            console.log('Category changed:', this.value);
+            updatePreview();
+        });
+
+        // Initialize preview on load
+        console.log('Calling initial updatePreview...');
         updatePreview();
     });
 </script>

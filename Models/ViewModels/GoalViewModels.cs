@@ -63,6 +63,9 @@ namespace HabitGoalTrackerApp.Models.ViewModels
         [Display(Name = "Target Value")]
         public decimal TargetValue { get; set; }
 
+        [Display(Name = "Current Value")]
+        public decimal CurrentValue { get; set; }
+
         [StringLength(50, ErrorMessage = "Unit cannot exceed 50 characters.")]
         [Display(Name = "Unit (e.g., books, pounds, hours)")]
         public string? Unit { get; set; }

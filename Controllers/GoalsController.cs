@@ -162,6 +162,7 @@ namespace HabitGoalTrackerApp.Controllers
                 Title = goal.Title,
                 Description = goal.Description,
                 TargetValue = goal.TargetValue,
+                CurrentValue = goal.CurrentValue,
                 Unit = goal.Unit,
                 TargetDate = goal.TargetDate,
                 Category = goal.Category
