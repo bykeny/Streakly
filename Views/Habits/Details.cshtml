@@ -316,13 +316,15 @@
                 return;
             }
 
+            const formData = new FormData();
+            formData.append('isActive', isActive);
+
             fetch(`/habits/toggle-status/${habitId}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
                 },
-                body: JSON.stringify({ isActive: isActive })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
