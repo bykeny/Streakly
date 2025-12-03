@@ -125,7 +125,7 @@
                                         }
                                         else
                                         {
-                                            <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
+                                            <form asp-controller="habits" asp-action="toggle-completion" method="post" class="d-inline">
                                                 <input type="hidden" name="id" value="@habit.Id" />
                                                 <input type="hidden" name="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
                                                 <button type="submit" class="btn btn-sm btn-outline-primary">
@@ -419,7 +419,7 @@
                                 // Mark as not completed
                                 habitItem.removeClass('completed');
                                 habitItem.find('.habit-status').html(`
-                                    <form asp-controller="Habits" asp-action="ToggleCompletion" method="post" class="d-inline">
+                                    <form action="/habits/toggle-completion" method="post" class="d-inline">
                                         <input type="hidden" name="id" value="${form.find('input[name=id]').val()}" />
                                         <input type="hidden" name="date" value="${form.find('input[name=date]').val()}" />
                                         <button type="submit" class="btn btn-sm btn-outline-primary">

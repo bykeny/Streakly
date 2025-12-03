@@ -259,7 +259,7 @@ namespace HabitGoalTrackerApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Route("habits/toggle-completion/{id}")]
+        [Route("habits/toggle-completion")]
         [HttpPost]
         public async Task<IActionResult> ToggleCompletion(int id)
         {
