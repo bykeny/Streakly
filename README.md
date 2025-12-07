@@ -43,7 +43,7 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 ## 🛠️ Technologies
 
 - **Backend**
-  - ASP.NET Core MVC (.NET 9)
+  - ASP.NET Core MVC (.NET 10)
   - Entity Framework Core
   - ASP.NET Core Identity (Custom MVC Authentication)
   - ML.NET (for AI-powered insights)
@@ -71,33 +71,87 @@ The application uses a custom MVC-based authentication system built on ASP.NET C
 
 ## 📋 Prerequisites
 
-- .NET 9 SDK
-- SQL Server (Local or Express)
-- Visual Studio 2022 or later
+- .NET 10 SDK (for local non-Docker development)
+- Docker Desktop (for containerized development)
+- SQL Server (Local/Express or Dockerized via `docker-compose`)
+- Visual Studio 2022 or later (optional but recommended)
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Local Development with Docker)
 
-1. **Clone the repository**
+This project includes a Docker setup that runs the web app and a SQL Server database together using `docker-compose`.
 
-`git clone https://github.com/bykeny/Streakly.git`
+### 1. Clone the repository
 
-`cd HabitGoalTrackerApp`
+```bash
+git clone https://github.com/bykeny/Streakly.git
+cd HabitGoalTrackerApp
+```
 
-3. **Update database connection string**
-- Open `appsettings.json`
-- Update the `DefaultConnection` string to your SQL Server instance
+### 2. Create a `.env` file
 
-3. **Apply database migrations**
+In the project root (`HabitGoalTrackerApp`), create a file named `.env`:
 
-`dotnet ef database update`
+```env
+MSSQL_SA_PASSWORD=YourStrong!Passw0rd123
+```
 
-4. **Run the application**
+> Use a strong password and **do not commit** the `.env` file to source control.
 
-`dotnet run`
+### 3. Start the app and database with Docker
 
-5. **Access the application**
-- Open your browser to `https://localhost:5032`
-- Register a new account to get started
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+This will:
+
+- Build the `HabitGoalTrackerApp` image using the `Dockerfile`.
+- Start the `web` container (ASP.NET Core app) and the `db` container (SQL Server 2022).
+- Configure the app to connect to SQL Server via the `ConnectionStrings__HabitGoalConnection` environment variable.
+
+### 4. Access the application
+
+- Open your browser and go to: `http://localhost:5032`
+- Register a new account to get started.
+
+### 5. Stopping the containers
+
+Press `Ctrl+C` in the terminal that is running `docker compose up`, or run:
+
+```bash
+docker compose down
+```
+
+## 🚀 Getting Started (Local Development without Docker)
+
+You can also run the app directly with the .NET SDK and your own SQL Server instance.
+
+1. **Clone the repository** (same as above).
+2. **Configure the connection string**:
+  - Open `appsettings.json`.
+  - Update `ConnectionStrings:HabitGoalConnection` to point to your SQL Server.
+  - Alternatively, use user-secrets:
+
+    ```bash
+    dotnet user-secrets set "ConnectionStrings:HabitGoalConnection" "Server=(localdb)\\MSSQLLocalDB;Database=HabitGoalDB;Trusted_Connection=True;"
+    ```
+
+3. **Apply database migrations** (optional, if not applied yet):
+
+  ```bash
+  dotnet ef database update
+  ```
+
+4. **Run the application**:
+
+  ```bash
+  dotnet run
+  ```
+
+5. **Access the application**:
+  - Open your browser at `https://localhost:5032` or the URL printed in the console.
 
 ## 🔧 Configuration
 
@@ -107,6 +161,68 @@ The application supports various configuration options through `appsettings.json
 - Authentication settings
 - Email service configuration
 - Logging preferences
+
+## 🔄 CI/CD with GitHub Actions & Docker Hub
+
+This repository includes a GitHub Actions workflow (`.github/workflows/ci-docker.yml`) that builds, tests, and containerizes the app, then pushes images to Docker Hub.
+
+### Workflow overview
+
+On pushes to `main` or `containers` branches:
+
+1. **Build & test** (`build_and_test` job)
+  - Checks out the repository.
+  - Sets up .NET 10 SDK.
+  - Runs `dotnet restore`, `dotnet build`, and `dotnet test` in Release configuration.
+
+2. **Docker build & push** (`docker_build_and_push` job)
+  - Runs only if the build & tests succeed.
+  - Logs in to Docker Hub using repository secrets:
+    - `DOCKERHUB_USERNAME`
+    - `DOCKERHUB_PASSWORD` (access token with read/write scope).
+  - Builds the Docker image using the root `Dockerfile`.
+  - Pushes the image to Docker Hub (`bykeny/habit-goal-tracker`) with tags:
+    - `latest`
+    - `${{ github.sha }}` (commit SHA)
+    - `v0.1.${{ github.run_number }}` (simple semantic-style build tag)
+
+This makes it easy to track exactly which build is running from the tag.
+
+## 🐳 Using the Docker Hub Image
+
+Once the CI pipeline has pushed an image, you can pull and run it directly from Docker Hub.
+
+### 1. Pull the image
+
+```bash
+docker pull bykeny/habit-goal-tracker:latest
+```
+
+You can also use a specific version tag, for example:
+
+```bash
+docker pull bykeny/habit-goal-tracker:v0.1.10
+```
+
+### 2. Run the app container
+
+You still need a SQL Server instance. For quick testing, you can:
+
+1. Start a SQL Server container:
+
+  ```bash
+  docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=YourStrong!Passw0rd123" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+  ```
+
+2. Run the app, passing the connection string via environment variable:
+
+  ```bash
+  docker run -p 5032:8080 \
+    -e "ConnectionStrings__HabitGoalConnection=Server=host.docker.internal,1433;Database=HabitGoalDB;User Id=sa;Password=YourStrong!Passw0rd123;TrustServerCertificate=True;Encrypt=False" \
+    bykeny/habit-goal-tracker:latest
+  ```
+
+Then open `http://localhost:5032` in your browser.
 
 ## 🎯 Future Roadmap
 

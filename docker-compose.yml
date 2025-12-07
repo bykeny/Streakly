@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    container_name: habitgoal-web
+    ports:
+      - "5032:8080" # host:container
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      # SQL Server connection string via ASP.NET Core conventions
+      ConnectionStrings__HabitGoalConnection: >-
+        Server=db,1433;Database=HabitGoalDB;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Encrypt=False
+    depends_on:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: habitgoal-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+volumes:
+  mssql-data:

@@ -95,6 +95,12 @@ app.MapControllers();
 // Remove this line to completely disable Identity Razor Pages
 // app.MapRazorPages().WithStaticAssets();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.Run();
 
 // Make Program class accessible to integration tests
