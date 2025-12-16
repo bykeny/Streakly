@@ -1,3 +1,11 @@
+# Habit & Goal Tracker App - Single Docker Image
+# Usage:
+#   docker run -p 8080:8080 bykeny/habit-goal-tracker
+#   (Uses in-memory database if DATABASE_URL not provided)
+#
+#   docker run -p 8080:8080 -e DATABASE_URL="Server=...;Database=...;..." bykeny/habit-goal-tracker
+#   (Uses SQL Server with provided connection string)
+
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
@@ -10,7 +18,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o /app/publish
 
-# Runtime stage
+# Runtime stage (no SQL Server needed - app only)
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 

@@ -9,9 +9,37 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("HabitGoalConnection") ?? throw new InvalidOperationException("Connection string 'HabitGoalConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+// Database configuration:
+// - If DATABASE_URL environment variable is set, use SQL Server with that connection string
+// - Otherwise, in Production environment, use in-memory database (for quick testing without SQL Server)
+// - In Development, use the connection string from appsettings.json
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+var useInMemory = false;
+
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // DATABASE_URL explicitly provided - use SQL Server
+    Console.WriteLine("Using SQL Server database (DATABASE_URL provided)");
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(databaseUrl));
+}
+else if (builder.Environment.IsProduction())
+{
+    // Production without DATABASE_URL - use in-memory database
+    Console.WriteLine("WARNING: No DATABASE_URL provided. Using in-memory database (data will be lost on restart).");
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseInMemoryDatabase("HabitGoalTrackerInMemory"));
+    useInMemory = true;
+}
+else
+{
+    // Development - use connection string from appsettings.json
+    var connectionString = builder.Configuration.GetConnectionString("HabitGoalConnection") 
+        ?? throw new InvalidOperationException("Connection string 'HabitGoalConnection' not found.");
+    Console.WriteLine("Using SQL Server database (from appsettings.json)");
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Configure Identity with custom options (no default UI)
@@ -81,6 +109,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Serve dynamically uploaded files (e.g., profile images)
+app.UseStaticFiles();
+
+// Serve pre-built static assets with fingerprinting
 app.MapStaticAssets();
 
 app.MapControllerRoute(
@@ -98,7 +130,18 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    
+    // Check if using in-memory database (doesn't support migrations)
+    if (db.Database.IsInMemory())
+    {
+        // Ensure schema is created for in-memory database
+        db.Database.EnsureCreated();
+    }
+    else
+    {
+        // Apply pending migrations for SQL Server
+        db.Database.Migrate();
+    }
 }
 
 app.Run();

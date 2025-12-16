@@ -73,12 +73,22 @@ The application uses a custom MVC-based authentication system built on ASP.NET C
 
 - .NET 10 SDK (for local non-Docker development)
 - Docker Desktop (for containerized development)
-- SQL Server (Local/Express or Dockerized via `docker-compose`)
+- SQL Server (Local/Express or Dockerized via `docker-compose`) - optional, app can run with in-memory database
 - Visual Studio 2022 or later (optional but recommended)
 
-## 🚀 Getting Started (Local Development with Docker)
+## 🚀 Quick Start with Docker (No Database Required)
 
-This project includes a Docker setup that runs the web app and a SQL Server database together using `docker-compose`.
+The simplest way to try the app - runs with an in-memory database (data resets on restart):
+
+```bash
+docker run -p 8080:8080 bykeny/habit-goal-tracker
+```
+
+Then open `http://localhost:8080` in your browser.
+
+## 🚀 Getting Started (Local Development with Docker Compose)
+
+For persistent data storage, use `docker-compose` which runs the app with a SQL Server database.
 
 ### 1. Clone the repository
 
@@ -107,9 +117,10 @@ docker compose up --build
 
 This will:
 
-- Build the `HabitGoalTrackerApp` image using the `Dockerfile`.
-- Start the `web` container (ASP.NET Core app) and the `db` container (SQL Server 2022).
-- Configure the app to connect to SQL Server via the `ConnectionStrings__HabitGoalConnection` environment variable.
+- Build the `bykeny/habit-goal-tracker` image using the `Dockerfile`.
+- Start the `db` container (SQL Server 2022) with a healthcheck.
+- Wait for SQL Server to be healthy, then start the `web` container (ASP.NET Core app).
+- Configure the app to connect to SQL Server via the `DATABASE_URL` environment variable.
 
 ### 4. Access the application
 
@@ -192,37 +203,51 @@ This makes it easy to track exactly which build is running from the tag.
 
 Once the CI pipeline has pushed an image, you can pull and run it directly from Docker Hub.
 
-### 1. Pull the image
+### Option 1: Quick Start (In-Memory Database)
+
+For quick testing without any database setup:
 
 ```bash
-docker pull bykeny/habit-goal-tracker:latest
+docker run -p 8080:8080 bykeny/habit-goal-tracker
 ```
 
-You can also use a specific version tag, for example:
+> ⚠️ **Note**: Data is stored in-memory and will be lost when the container stops.
+
+### Option 2: With External SQL Server (Persistent Data)
+
+Connect to an existing SQL Server instance using the `DATABASE_URL` environment variable:
 
 ```bash
-docker pull bykeny/habit-goal-tracker:v0.1.10
+docker run -p 8080:8080 \
+  -e "DATABASE_URL=Server=your-server,1433;Database=HabitGoalDB;User Id=sa;Password=YourPassword;TrustServerCertificate=True;Encrypt=False" \
+  bykeny/habit-goal-tracker
 ```
 
-### 2. Run the app container
+### Option 3: With Docker Compose (Recommended for Development)
 
-You still need a SQL Server instance. For quick testing, you can:
+Use `docker-compose.yml` to run both the app and SQL Server together:
 
-1. Start a SQL Server container:
+```bash
+# Set the SQL Server password
+export MSSQL_SA_PASSWORD="YourStrong!Passw0rd123"  # Linux/Mac
+# or
+$env:MSSQL_SA_PASSWORD = "YourStrong!Passw0rd123"  # Windows PowerShell
 
-  ```bash
-  docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=YourStrong!Passw0rd123" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
-  ```
-
-2. Run the app, passing the connection string via environment variable:
-
-  ```bash
-  docker run -p 5032:8080 \
-    -e "ConnectionStrings__HabitGoalConnection=Server=host.docker.internal,1433;Database=HabitGoalDB;User Id=sa;Password=YourStrong!Passw0rd123;TrustServerCertificate=True;Encrypt=False" \
-    bykeny/habit-goal-tracker:latest
-  ```
+# Start everything
+docker compose up
+```
 
 Then open `http://localhost:5032` in your browser.
+
+### Pulling Specific Versions
+
+```bash
+# Latest version
+docker pull bykeny/habit-goal-tracker:latest
+
+# Specific version
+docker pull bykeny/habit-goal-tracker:v0.1.10
+```
 
 ## 🎯 Future Roadmap
 
