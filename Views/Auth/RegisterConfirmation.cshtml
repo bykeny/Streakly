@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Registration Confirmation";
+    var email = ViewData["Email"]?.ToString();
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-envelope-check text-success" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2zm3.708 6.208L1 11.105V5.383zM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2z"/>
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686"/>
+                        </svg>
+                    </div>
+                    <h2 class="card-title mb-3">Check Your Email</h2>
+                    <p class="text-muted mb-4">
+                        We've sent a confirmation email to:<br/>
+                        <strong>@email</strong>
+                    </p>
+                    <p class="text-muted">
+                        Please click the link in the email to confirm your account and complete your registration.
+                    </p>
+                    <hr class="my-4"/>
+                    <p class="small text-muted">
+                        Didn't receive the email? Check your spam folder or 
+                        <a asp-action="Register" asp-controller="Auth">try registering again</a>.
+                    </p>
+                    <a asp-action="Login" asp-controller="Auth" class="btn btn-primary mt-3">
+                        Go to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

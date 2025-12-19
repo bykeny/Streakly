@@ -80,6 +80,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddControllersWithViews();
 
+// Configure email settings
+var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>() ?? new EmailSettings();
+builder.Services.AddSingleton(emailSettings);
+
 // Register email sender service
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 

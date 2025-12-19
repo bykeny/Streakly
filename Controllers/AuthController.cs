@@ -57,7 +57,7 @@ namespace HabitGoalTrackerApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            model.ReturnUrl ??= Url.Content("~/Dashboard");
+            model.ReturnUrl ??= Url.Content("~/dashboard");
 
             if (ModelState.IsValid)
             {
@@ -140,7 +140,7 @@ namespace HabitGoalTrackerApp.Controllers
                     Email = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    EmailConfirmed = true, // Set to false if you want to require email confirmation
+                    EmailConfirmed = false, // Require email confirmation
                     CreatedAt = DateTime.UtcNow,
                     LastLoginAt = DateTime.UtcNow
                 };
@@ -151,24 +151,27 @@ namespace HabitGoalTrackerApp.Controllers
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Sign in the user immediately after registration
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    
-                    TempData["SuccessMessage"] = "Welcome to Streakly! Your account has been created successfully.";
-                    return LocalRedirect(model.ReturnUrl);
+                    // Generate email confirmation token
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                    // Alternative: If you want to require email confirmation before allowing login:
-                    // var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    // var callbackUrl = Url.Action(
-                    //     "ConfirmEmail",
-                    //     "Auth",
-                    //     new { userId = user.Id, code = code },
-                    //     protocol: Request.Scheme);
-                    // 
-                    // await _emailSender.SendEmailAsync(model.Email, "Confirm your email",
-                    //     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
-                    // 
-                    // return RedirectToAction(nameof(RegisterConfirmation), new { email = model.Email });
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "Auth",
+                        new { userId = user.Id, code = code },
+                        protocol: Request.Scheme);
+
+                    await _emailSender.SendEmailAsync(
+                        model.Email,
+                        "Confirm your email - Streakly",
+                        $@"<h2>Welcome to Streakly!</h2>
+                        <p>Thank you for registering. Please confirm your email address by clicking the link below:</p>
+                        <p><a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>Confirm Email Address</a></p>
+                        <p>If you didn't create an account, you can safely ignore this email.</p>
+                        <br/>
+                        <p>Best regards,<br/>The Streakly Team</p>");
+
+                    return RedirectToAction(nameof(RegisterConfirmation), new { email = model.Email });
                 }
 
                 foreach (var error in result.Errors)
@@ -179,6 +182,47 @@ namespace HabitGoalTrackerApp.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        // GET: /auth/register-confirmation
+        [Route("auth/register-confirmation")]
+        [HttpGet]
+        public IActionResult RegisterConfirmation(string email)
+        {
+            ViewData["Email"] = email;
+            return View();
+        }
+
+        // GET: /auth/confirm-email
+        [Route("auth/confirm-email")]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{userId}'.");
+            }
+
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User confirmed their email successfully.");
+                TempData["SuccessMessage"] = "Thank you for confirming your email. You can now log in.";
+                return View("ConfirmEmailSuccess");
+            }
+            else
+            {
+                _logger.LogWarning("Error confirming email for user {UserId}.", userId);
+                return View("ConfirmEmailError");
+            }
         }
 
         #endregion

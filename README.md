@@ -66,8 +66,8 @@ The application uses a custom MVC-based authentication system built on ASP.NET C
 - **Custom AuthController** replaces default Identity Razor Pages
 - Routes: `/Auth/Login`, `/Auth/Register`, `/Auth/Logout`, `/Auth/ForgotPassword`
 - Features: password reset, account lockout, remember me, secure cookies
-- Email service integration ready (currently logs to console in development)
-- For production: configure email service in `Services/Implementation/EmailSender.cs`
+- **Email confirmation required** for new registrations
+- SMTP email service with MailKit (configurable via environment variables)
 
 ## 📋 Prerequisites
 
@@ -103,9 +103,20 @@ In the project root (`HabitGoalTrackerApp`), create a file named `.env`:
 
 ```env
 MSSQL_SA_PASSWORD=YourStrong!Passw0rd123
+
+# Email settings (optional - if not set, emails are logged to console)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-gmail-app-password
+SMTP_FROM_EMAIL=your-email@gmail.com
+SMTP_FROM_NAME=Streakly
+SMTP_USE_SSL=true
 ```
 
-> Use a strong password and **do not commit** the `.env` file to source control.
+> ⚠️ **Important**: 
+> - Use a strong password and **do not commit** the `.env` file to source control.
+> - For Gmail, you need an [App Password](https://myaccount.google.com/apppasswords) (requires 2FA enabled).
 
 ### 3. Start the app and database with Docker
 
@@ -252,11 +263,11 @@ docker pull bykeny/habit-goal-tracker:v0.1.10
 ## 🎯 Future Roadmap
 
 - [x] AI-powered insights with ML.NET
+- [x] Email notifications (registration confirmation, password reset)
 - [ ] Mobile app integration
 - [ ] Social features and habit sharing
 - [ ] Advanced analytics and reporting
 - [ ] API endpoints for third-party integration
-- [ ] Email notifications and reminders
 - [ ] Data export/import functionality
 - [ ] Gamification and achievement system
 - [ ] Push notifications and reminders

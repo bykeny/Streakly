@@ -1,28 +1,33 @@
+# Development docker-compose with Mailpit for email testing
+# Usage: docker compose -f docker-compose.dev.yml up --build
+
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    image: bykeny/habit-goal-tracker
+    image: bykeny/habit-goal-tracker:dev
     container_name: habitgoal-web
     ports:
       - "5032:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Development
       - DATABASE_URL=Server=db;Database=HabitGoalTracker;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
-      # Email settings (optional - if not set, emails are logged to console)
-      - EmailSettings__SmtpHost=${SMTP_HOST:-}
-      - EmailSettings__SmtpPort=${SMTP_PORT:-587}
-      - EmailSettings__SmtpUsername=${SMTP_USERNAME:-}
-      - EmailSettings__SmtpPassword=${SMTP_PASSWORD:-}
-      - EmailSettings__FromEmail=${SMTP_FROM_EMAIL:-}
-      - EmailSettings__FromName=${SMTP_FROM_NAME:-Streakly}
-      - EmailSettings__UseSsl=${SMTP_USE_SSL:-true}
+      # Mailpit SMTP settings (no auth required)
+      - EmailSettings__SmtpHost=mailpit
+      - EmailSettings__SmtpPort=1025
+      - EmailSettings__SmtpUsername=
+      - EmailSettings__SmtpPassword=
+      - EmailSettings__FromEmail=noreply@streakly.local
+      - EmailSettings__FromName=Streakly
+      - EmailSettings__UseSsl=false
     volumes:
       - profile_images:/app/wwwroot/images/profiles
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -40,6 +45,16 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: habitgoal-mailpit
+    ports:
+      - "8025:8025"   # Web UI to view emails
+      - "1025:1025"   # SMTP server
+    environment:
+      - MP_SMTP_AUTH_ACCEPT_ANY=true
+      - MP_SMTP_AUTH_ALLOW_INSECURE=true
 
 volumes:
   sqlserver_data:
