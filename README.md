@@ -36,7 +36,6 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 
 ### User Experience
 - Clean, modern Bootstrap UI
-- Dark/Light theme support
 - Responsive design for mobile and desktop
 - Customizable user preferences
 
@@ -64,7 +63,7 @@ Streakly is a modern web application built with ASP.NET Core MVC that helps user
 The application uses a custom MVC-based authentication system built on ASP.NET Core Identity:
 
 - **Custom AuthController** replaces default Identity Razor Pages
-- Routes: `/Auth/Login`, `/Auth/Register`, `/Auth/Logout`, `/Auth/ForgotPassword`
+- Routes: `/auth/login`, `/auth/register`, `/auth/logout`, `/auth/forgot-password`
 - Features: password reset, account lockout, remember me, secure cookies
 - **Email confirmation required** for new registrations
 - SMTP email service with MailKit (configurable via environment variables)
@@ -94,12 +93,12 @@ For persistent data storage, use `docker-compose` which runs the app with a SQL 
 
 ```bash
 git clone https://github.com/bykeny/Streakly.git
-cd HabitGoalTrackerApp
+cd Streakly
 ```
 
 ### 2. Create a `.env` file
 
-In the project root (`HabitGoalTrackerApp`), create a file named `.env`:
+In the project root (`Streakly`), create a file named `.env`:
 
 ```env
 MSSQL_SA_PASSWORD=YourStrong!Passw0rd123
