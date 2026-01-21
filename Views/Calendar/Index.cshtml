@@ -16,12 +16,35 @@
             </svg>
             Heatmap View
         </a>
-        <button class="btn btn-outline-secondary" id="exportBtn">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            Export
-        </button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Export
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" id="exportJsonBtn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Export as JSON
+                </a></li>
+                <li><a class="dropdown-item" href="#" id="exportCsvBtn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                    Export as CSV
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" id="exportBothBtn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="me-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Export Both (ZIP)
+                </a></li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -243,8 +266,21 @@
         });
 
         // Export functionality
-        document.getElementById('exportBtn').addEventListener('click', function() {
-            exportCalendar();
+        const userEmail = '@User.Identity!.Name';
+        
+        document.getElementById('exportJsonBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            exportCalendar('json');
+        });
+        
+        document.getElementById('exportCsvBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            exportCalendar('csv');
+        });
+        
+        document.getElementById('exportBothBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            exportCalendar('both');
         });
 
         // Calendar day click handler
@@ -363,21 +399,154 @@
             };
         }
 
-        function exportCalendar() {
-            // Simple export functionality
-            const calendarData = {
-                year: currentYear,
-                month: currentMonth,
-                exportDate: new Date().toISOString()
+        async function exportCalendar(format) {
+            try {
+                showToast('Preparing export...', 'info');
+                
+                // Fetch complete calendar data from API
+                const response = await fetch(`/calendar/get-calendar-data?year=${currentYear}&month=${currentMonth}`);
+                if (!response.ok) throw new Error('Failed to fetch calendar data');
+                
+                const calendarData = await response.json();
+                
+                // Build enhanced export data
+                const exportData = buildExportData(calendarData);
+                
+                // Generate filename with user email
+                const monthStr = currentMonth.toString().padStart(2, '0');
+                const emailPrefix = userEmail.split('@@')[0].replace(/[^a-zA-Z0-9]/g, '-');
+                const baseFilename = `streakly-${emailPrefix}-${currentYear}-${monthStr}`;
+                
+                if (format === 'json') {
+                    downloadJson(exportData, `${baseFilename}.json`);
+                    showToast('JSON export completed successfully!', 'success');
+                } else if (format === 'csv') {
+                    downloadCsv(exportData, `${baseFilename}.csv`);
+                    showToast('CSV export completed successfully!', 'success');
+                } else if (format === 'both') {
+                    await downloadBoth(exportData, baseFilename);
+                    showToast('Export completed! Both files downloaded.', 'success');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Export failed. Please try again.', 'error');
+            }
+        }
+        
+        function buildExportData(calendarData) {
+            const exportData = {
+                exportMetadata: {
+                    exportDate: new Date().toISOString(),
+                    exportVersion: '1.0',
+                    userEmail: userEmail,
+                    year: calendarData.year,
+                    month: calendarData.month,
+                    monthName: calendarData.monthName
+                },
+                statistics: {
+                    totalActiveHabits: calendarData.stats?.totalActiveHabits || 0,
+                    averageCompletionRate: calendarData.stats?.averageCompletionRate || 0,
+                    bestDay: calendarData.stats?.bestDay || 0,
+                    currentStreak: calendarData.stats?.currentStreak || 0,
+                    longestStreak: calendarData.stats?.longestStreak || 0,
+                    totalGoalProgress: calendarData.stats?.totalGoalProgress || 0,
+                    goalProgressValue: calendarData.stats?.goalProgressValue || 0
+                },
+                habits: (calendarData.habits || []).map(habit => ({
+                    id: habit.id,
+                    title: habit.title,
+                    color: habit.color,
+                    iconName: habit.iconName,
+                    isActive: habit.isActive,
+                    repeatType: habit.repeatType || 'Daily',
+                    completionStats: {
+                        totalScheduled: Object.keys(habit.scheduledDates || {}).length,
+                        totalCompleted: Object.keys(habit.completionDates || {}).filter(date => habit.completionDates[date]).length
+                    }
+                })),
+                dailyData: []
             };
-
-            const dataStr = JSON.stringify(calendarData, null, 2);
+            
+            // Extract daily data from weeks
+            if (calendarData.weeks && Array.isArray(calendarData.weeks)) {
+                calendarData.weeks.forEach(week => {
+                    if (week.days && Array.isArray(week.days)) {
+                        week.days.forEach(day => {
+                            if (day.isCurrentMonth) {
+                                exportData.dailyData.push({
+                                    date: day.date,
+                                    dayOfWeek: new Date(day.date).toLocaleDateString('en-US', { weekday: 'long' }),
+                                    isToday: day.isToday,
+                                    completedHabits: day.completedHabits || 0,
+                                    totalScheduledHabits: day.totalScheduledHabits || 0,
+                                    completionPercentage: day.completionPercentage || 0,
+                                    habitDetails: (day.habitStatuses || []).map(status => ({
+                                        habitId: status.habitId,
+                                        habitTitle: status.habitTitle,
+                                        color: status.color,
+                                        isCompleted: status.isCompleted
+                                    })),
+                                    goalProgress: (day.goalProgress || []).map(progress => ({
+                                        goalTitle: progress.goalTitle,
+                                        progressValue: progress.progressValue,
+                                        unit: progress.unit,
+                                        notes: progress.notes
+                                    }))
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+            
+            return exportData;
+        }
+        
+        function downloadJson(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], {type: 'application/json'});
-
             const link = document.createElement('a');
             link.href = URL.createObjectURL(dataBlob);
-            link.download = `calendar-${currentYear}-${currentMonth.toString().padStart(2, '0')}.json`;
+            link.download = filename;
             link.click();
+        }
+        
+        function downloadCsv(data, filename) {
+            let csv = 'Date,Day of Week,Completed Habits,Total Scheduled,Completion %,Habit Details,Goal Progress\n';
+            
+            data.dailyData.forEach(day => {
+                const date = new Date(day.date).toLocaleDateString();
+                const habitDetails = day.habitDetails.map(h => `${h.habitTitle}:${h.isCompleted ? 'Done' : 'Pending'}`).join('; ');
+                const goalProgress = day.goalProgress.map(g => `${g.goalTitle}:+${g.progressValue}${g.unit}`).join('; ');
+                
+                csv += `${date},${day.dayOfWeek},${day.completedHabits},${day.totalScheduledHabits},${day.completionPercentage.toFixed(1)},"${habitDetails}","${goalProgress}"\n`;
+            });
+            
+            // Add summary statistics
+            csv += '\n\nMONTHLY STATISTICS\n';
+            csv += `Active Habits,${data.statistics.totalActiveHabits}\n`;
+            csv += `Average Completion Rate,${data.statistics.averageCompletionRate}%\n`;
+            csv += `Best Day,${data.statistics.bestDay}%\n`;
+            csv += `Current Streak,${data.statistics.currentStreak} days\n`;
+            csv += `Longest Streak,${data.statistics.longestStreak} days\n`;
+            csv += `Total Goal Progress,${data.statistics.totalGoalProgress}\n`;
+            
+            const csvBlob = new Blob([csv], {type: 'text/csv'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(csvBlob);
+            link.download = filename;
+            link.click();
+        }
+        
+        async function downloadBoth(data, baseFilename) {
+            // Download JSON
+            downloadJson(data, `${baseFilename}.json`);
+            
+            // Wait a bit to avoid browser blocking multiple downloads
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Download CSV
+            downloadCsv(data, `${baseFilename}.csv`);
         }
 
         function initializePopovers() {
