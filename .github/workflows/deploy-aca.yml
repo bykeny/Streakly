@@ -23,5 +23,4 @@ jobs:
           az containerapp update \
             --name streakly-app \
             --resource-group rg-streakly \
-            --image bykeny/habit-goal-tracker:latest \
-            --location polandcentral
+            --image bykeny/habit-goal-tracker:latest
