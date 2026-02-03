@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: terraform-apply
+  cancel-in-progress: false
+
 jobs:
   apply:
     runs-on: ubuntu-latest
@@ -34,3 +38,6 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: terraform
+        env:
+          TF_VAR_smtp_username: ${{ secrets.SMTP_USERNAME }}
+          TF_VAR_smtp_password: ${{ secrets.SMTP_PASSWORD }}

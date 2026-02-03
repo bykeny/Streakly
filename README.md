@@ -420,13 +420,24 @@ The repository includes three automated Terraform workflows:
 
 **Actions**:
 - Checks out code
+- Authenticates with Azure using OIDC
 - Sets up Terraform
 - Runs `terraform fmt -check` (validates formatting)
 - Runs `terraform init`
 - Runs `terraform validate` (checks syntax)
 - Runs `terraform plan` (shows proposed changes)
+- Posts plan results as PR comment with status table
+- Uploads plan artifact
 
-**Required Secrets**: None (read-only operation)
+**Required Secrets**:
+- `AZURE_CLIENT_ID` - Service Principal Client ID
+- `AZURE_TENANT_ID` - Azure Tenant ID
+- `AZURE_SUBSCRIPTION_ID` - Azure Subscription ID
+
+**Features**:
+- ✅ Concurrency control per PR
+- ✅ Automated PR comments with plan results
+- ✅ Format checking
 
 #### 2. Terraform Apply (`.github/workflows/terraform-apply.yml`)
 
@@ -435,7 +446,7 @@ The repository includes three automated Terraform workflows:
 **Purpose**: Automatically applies infrastructure changes to Azure
 
 **Actions**:
-- Authenticates with Azure using Service Principal
+- Authenticates with Azure using OIDC
 - Runs `terraform init`
 - Runs `terraform apply -auto-approve` (creates/updates infrastructure)
 
@@ -443,50 +454,78 @@ The repository includes three automated Terraform workflows:
 - `AZURE_CLIENT_ID` - Service Principal Client ID
 - `AZURE_TENANT_ID` - Azure Tenant ID
 - `AZURE_SUBSCRIPTION_ID` - Azure Subscription ID
-- `TF_VAR_smtp_username` - SMTP username (set as environment variable)
-- `TF_VAR_smtp_password` - SMTP password (set as environment variable)
+- `SMTP_USERNAME` - SMTP username (passed as `TF_VAR_smtp_username`)
+- `SMTP_PASSWORD` - SMTP password (passed as `TF_VAR_smtp_password`)
+
+**Features**:
+- ✅ Concurrency control (prevents simultaneous applies)
 
 > **Note**: Variables prefixed with `TF_VAR_` are automatically passed to Terraform as input variables.
 
 #### 3. Deploy to Container Apps (`.github/workflows/deploy-aca.yml`)
 
-**Trigger**: Successful completion of `ci-docker.yml` (new Docker image pushed)
+**Trigger**: Push to `main` branch
 
 **Purpose**: Updates the Azure Container App with the latest Docker image
 
 **Actions**:
-- Authenticates with Azure
+- Authenticates with Azure using OIDC
 - Updates container app image to latest version
 - Triggers new revision deployment
 
 **Required Secrets**:
-- `AZURE_CREDENTIALS` - Service Principal credentials JSON
+- `AZURE_CLIENT_ID` - Service Principal Client ID
+- `AZURE_TENANT_ID` - Azure Tenant ID
+- `AZURE_SUBSCRIPTION_ID` - Azure Subscription ID
+
+**Features**:
+- ✅ OIDC authentication (no stored credentials)
+- ✅ Concurrency control
 
 ### Setting Up GitHub Actions Secrets
 
-To enable automated deployments:
+To enable automated deployments with OIDC:
 
 1. **Create Azure Service Principal**:
 
 ```bash
 az ad sp create-for-rbac --name "github-actions-streakly" \
   --role contributor \
-  --scopes /subscriptions/YOUR_SUBSCRIPTION_ID \
-  --sdk-auth
+  --scopes /subscriptions/YOUR_SUBSCRIPTION_ID
 ```
 
-Save the JSON output securely.
+Save the `appId` (Client ID) and `tenant` from the output.
 
-2. **Add Repository Secrets** (Settings → Secrets and variables → Actions):
+2. **Configure Federated Credentials** (for OIDC):
+
+```bash
+# Replace with your values
+APP_ID="your-app-id-from-step-1"
+REPO_OWNER="bykeny"
+REPO_NAME="Streakly"
+
+# Create federated credential
+az ad app federated-credential create \
+  --id $APP_ID \
+  --parameters '{
+    "name": "github-actions",
+    "issuer": "https://token.actions.githubusercontent.com",
+    "subject": "repo:'"$REPO_OWNER"'/'"$REPO_NAME"':ref:refs/heads/main",
+    "audiences": ["api://AzureADTokenExchange"]
+  }'
+```
+
+3. **Add Repository Secrets** (Settings → Secrets and variables → Actions):
 
 | Secret Name | Value | Description |
 |-------------|-------|-------------|
-| `AZURE_CLIENT_ID` | From Service Principal | Client ID |
-| `AZURE_TENANT_ID` | From Service Principal | Tenant ID |
+| `AZURE_CLIENT_ID` | From Service Principal (appId) | Client ID for OIDC |
+| `AZURE_TENANT_ID` | From Service Principal (tenant) | Tenant ID for OIDC |
 | `AZURE_SUBSCRIPTION_ID` | Your Azure subscription ID | Subscription ID |
-| `AZURE_CREDENTIALS` | Full JSON output from step 1 | For deploy-aca.yml |
-| `TF_VAR_smtp_username` | Your email address | SMTP username |
-| `TF_VAR_smtp_password` | Gmail app password | SMTP password |
+| `SMTP_USERNAME` | Your email address | SMTP username |
+| `SMTP_PASSWORD` | Gmail app password | SMTP password |
+
+> **🔒 Security Note**: This setup uses **OIDC (OpenID Connect)** federated credentials instead of storing long-lived secrets. Authentication happens via short-lived tokens - no passwords or keys are stored in GitHub.
 
 ### Terraform Outputs
 

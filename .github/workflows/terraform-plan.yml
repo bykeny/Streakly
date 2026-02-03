@@ -3,6 +3,10 @@ name: Terraform Plan
 on:
   pull_request:
 
+concurrency:
+  group: terraform-plan-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -25,21 +29,74 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+        working-directory: terraform
+        continue-on-error: true
 
       - name: Terraform Init
+        id: init
         run: terraform init
         working-directory: terraform
 
       - name: Terraform Validate
-        run: terraform validate
+        id: validate
+        run: terraform validate -no-color
         working-directory: terraform
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        id: plan
+        run: terraform plan -no-color -out=tfplan 2>&1 | tee plan_output.txt
         working-directory: terraform
+        continue-on-error: true
 
       - name: Upload Plan
         uses: actions/upload-artifact@v4
+        if: steps.plan.outcome == 'success'
         with:
           name: tfplan
           path: terraform/tfplan
+
+      - name: Comment PR with Plan
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const planOutput = fs.readFileSync('terraform/plan_output.txt', 'utf8');
+            
+            const fmtStatus = '${{ steps.fmt.outcome }}' === 'success' ? '✅' : '❌';
+            const initStatus = '${{ steps.init.outcome }}' === 'success' ? '✅' : '❌';
+            const validateStatus = '${{ steps.validate.outcome }}' === 'success' ? '✅' : '❌';
+            const planStatus = '${{ steps.plan.outcome }}' === 'success' ? '✅' : '❌';
+            
+            const output = `#### Terraform Plan Results 📋
+            
+            | Step | Status |
+            |------|--------|
+            | Format | ${fmtStatus} |
+            | Init | ${initStatus} |
+            | Validate | ${validateStatus} |
+            | Plan | ${planStatus} |
+            
+            <details><summary>📖 Show Plan</summary>
+            
+            \`\`\`terraform
+            ${planOutput.slice(0, 60000)}
+            \`\`\`
+            
+            </details>
+            
+            *Pusher: @${{ github.actor }}, Workflow: \`${{ github.workflow }}\`*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });
