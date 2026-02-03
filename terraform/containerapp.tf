@@ -51,6 +51,11 @@ resource "azurerm_container_app" "streakly" {
         name        = "EmailSettings__UseSsl"
         secret_name = "smtp-use-ssl"
       }
+
+      env {
+        name  = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        value = azurerm_application_insights.streakly.connection_string
+      }
     }
 
     min_replicas = 0

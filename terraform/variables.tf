@@ -56,3 +56,8 @@ variable "smtp_use_ssl" {
   type    = string
   default = "true"
 }
+
+variable "appinsights_name" {
+  type    = string
+  default = "appi-streakly"
+}
