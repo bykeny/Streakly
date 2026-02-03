@@ -357,3 +357,16 @@ diagnostics.json
 *.tar
 *.zip
 
+# Terraform state
+terraform.tfstate
+terraform.tfstate.*
+*.tfstate
+*.tfstate.*
+
+# Terraform working directory
+.terraform/
+.terraform.lock.hcl.backup
+
+# Sensitive variables
+terraform.tfvars
+*.tfvars
